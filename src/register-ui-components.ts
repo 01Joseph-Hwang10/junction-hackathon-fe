@@ -109,7 +109,6 @@ const registerSelectStatusUI = (info: LandTileInfo) => {
   progress.value = info.progress * 100;
 
   // Actions
-<<<<<<< HEAD
   const buttons = appendButtonCards(Object.keys(actions), selectStatus)
   const [sowButton, irrigationButton, topDressingButton, plowingButton, harvestButton] = buttons
   sowButton.onclick = () => registerSelectSowUI(info)
@@ -118,30 +117,15 @@ const registerSelectStatusUI = (info: LandTileInfo) => {
   plowingButton.onclick = () => registerSelectPlowingButtonUI(info)
   harvestButton.onclick = () => {} // Some Action when harvest
 }
-=======
-  const buttons = appendButtonCards(Object.keys(actions), selectStatus);
-  const [
-    sowButton,
-    irrigationButton,
-    topDressingButton,
-    plowingButton,
-    harvestButton,
-  ] = buttons;
-  sowButton.onclick = () => registerSelectSowUI(info);
-};
->>>>>>> ee4306b52daffee0594f043c3373cd91d12783d0
 
 const registerSelectSowUI = (info: LandTileInfo) => {};
 
-<<<<<<< HEAD
 const registerSelectIrrigationUI = (info: LandTileInfo) => {}
 
 const registerSelectTopDressingUI = (info: LandTileInfo) => {}
 
 const registerSelectPlowingButtonUI = (info: LandTileInfo) => {}
 
-registerCropSelectionUI()
-=======
 registerCropSelectionUI();
 
 const getTimeDom = () => {
@@ -154,4 +138,3 @@ export const setTime = (timeText: string) => {
     dom.innerHTML = timeText;
   }
 };
->>>>>>> ee4306b52daffee0594f043c3373cd91d12783d0

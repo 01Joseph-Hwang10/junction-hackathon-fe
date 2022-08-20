@@ -10,7 +10,8 @@
     - #select-cultivation
     - #select-harvest
 */
-exports.__esModule = true;
+
+exports.setTime = void 0;
 var clear = function () {
     document.querySelectorAll("section").forEach(function (section) {
         section.setAttribute("style", "display: none;");
@@ -106,3 +107,13 @@ var registerSelectIrrigationUI = function (info) { };
 var registerSelectTopDressingUI = function (info) { };
 var registerSelectPlowingButtonUI = function (info) { };
 registerCropSelectionUI();
+var getTimeDom = function () {
+    return document.querySelector(".time-text");
+};
+var setTime = function (timeText) {
+    var dom = getTimeDom();
+    if (dom) {
+        dom.innerHTML = timeText;
+    }
+};
+exports.setTime = setTime;

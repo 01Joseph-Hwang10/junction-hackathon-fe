@@ -15,197 +15,203 @@
 
 <style>
   @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap");
-h1, h2, h3, h4, h5, h6, p, span {
-  padding: 0;
-  margin: 0;
-  color: #333333;
-  font-family: "Noto Sans KR", sans-serif;
-}
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  span {
+    padding: 0;
+    margin: 0;
+    color: #333333;
+    font-family: "Noto Sans KR", sans-serif;
+  }
 
-button {
-  background-color: transparent;
-  border: none;
-}
+  button {
+    background-color: transparent;
+    border: none;
+  }
 
-* {
-  box-sizing: border-box;
-}
+  * {
+    box-sizing: border-box;
+  }
 
-html,
-body {
-  display: flex;
-  width: 100%;
-  height: 100vh;
-  justify-content: center;
-  align-items: center;
-}
+  html,
+  body {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+  }
 
-#modal {
-  width: fit-content;
-  background-color: #ffffff;
-  border-radius: 1rem;
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  padding: 28px;
-  border-radius: 24px;
-  box-shadow: 1px 1px 6px 0 rgba(0, 0, 0, 0.1);
-}
+  #modal {
+    width: fit-content;
+    background-color: #ffffff;
+    border-radius: 1rem;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding: 28px;
+    border-radius: 24px;
+    box-shadow: 1px 1px 6px 0 rgba(0, 0, 0, 0.1);
+  }
 
-.cards-horizontal {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  align-items: center;
-  padding: 0 50px;
-}
+  .cards-horizontal {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 0 50px;
+  }
 
-.cards-vertical {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: center;
-}
+  .cards-vertical {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+  }
 
-section {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: center;
-}
+  section {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+  }
 
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-}
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
 
-.container.left {
-  justify-content: start;
-  align-items: start;
-}
+  .container.left {
+    justify-content: start;
+    align-items: start;
+  }
 
-.container.row {
-  flex-direction: row;
-}
+  .container.row {
+    flex-direction: row;
+  }
 
-#indicator {
-  width: 100%;
-}
-#indicator .side {
-  min-width: 2rem;
-  color: #333333;
-}
-#indicator .side:hover {
-  cursor: pointer;
-  filter: grayscale(0.5);
-}
+  #indicator {
+    width: 100%;
+  }
+  #indicator .side {
+    min-width: 2rem;
+    color: #333333;
+  }
+  #indicator .side:hover {
+    cursor: pointer;
+    filter: grayscale(0.5);
+  }
 
-.card {
-  width: 80px;
-  height: 80px;
-  border-radius: 50px;
-  border: 2px solid #e0e0e0;
-  flex-direction: column;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: border 250ms linear;
-}
-.card span {
-  font-size: 16px;
-}
-.card:hover {
-  border-color: blue;
-}
-.card:hover .popup {
-  opacity: 1;
-}
-.card:not(:last-child) {
-  margin-right: 14px;
-}
+  .card {
+    width: 80px;
+    height: 80px;
+    border-radius: 50px;
+    border: 2px solid #e0e0e0;
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: border 250ms linear;
+  }
+  .card span {
+    font-size: 16px;
+  }
+  .card:hover {
+    border-color: blue;
+  }
+  .card:hover .popup {
+    opacity: 1;
+  }
+  .card:not(:last-child) {
+    margin-right: 14px;
+  }
 
-option {
-  display: flex;
-  justify-content: start;
-  align-items: center;
-}
+  option {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+  }
 
-.title {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 6px;
-}
-.title normal {
-  font-weight: 400;
-}
+  .title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .title normal {
+    font-weight: 400;
+  }
 
-.subtitle {
-  font-size: 16px;
-}
+  .subtitle {
+    font-size: 16px;
+  }
 
-#select-status {
-  display: flex;
-  align-items: center;
-}
+  #select-status {
+    display: flex;
+    align-items: center;
+  }
 
-.title-wrap {
-  display: flex;
-  flex-direction: column;
-  padding-left: 50px;
-}
+  .title-wrap {
+    display: flex;
+    flex-direction: column;
+    padding-left: 50px;
+  }
 
-.button-wrap {
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-.button-wrap img {
-  width: 32px;
-  height: 32px;
-}
-.button-wrap span {
-  font-size: 14px;
-}
-.button-wrap .popup {
-  background-color: #333333;
-  position: absolute;
-  top: -80px;
-  left: -50px;
-  max-width: 370px;
-  white-space: nowrap;
-  line-break: anywhere;
-  color: white;
-  padding: 10px 14px;
-  font-size: 14px;
-  text-align: left;
-  border-radius: 12px;
-  box-shadow: 1px 1px 6px 0 rgba(0, 0, 0, 0.1);
-  letter-spacing: -0.4px;
-  opacity: 0;
-  transition: opacity 100ms ease-in-out;
-}
+  .button-wrap {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .button-wrap img {
+    width: 32px;
+    height: 32px;
+  }
+  .button-wrap span {
+    font-size: 14px;
+  }
+  .button-wrap .popup {
+    background-color: #333333;
+    position: absolute;
+    top: -80px;
+    left: -50px;
+    max-width: 370px;
+    white-space: nowrap;
+    line-break: anywhere;
+    color: white;
+    padding: 10px 14px;
+    font-size: 14px;
+    text-align: left;
+    border-radius: 12px;
+    box-shadow: 1px 1px 6px 0 rgba(0, 0, 0, 0.1);
+    letter-spacing: -0.4px;
+    opacity: 0;
+    transition: opacity 100ms ease-in-out;
+  }
 
-#modal-top-container {
-  display: flex;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  padding-bottom: 80px;
-}
+  #modal-top-container {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 80px;
+  }
 
-/*# sourceMappingURL=bottom-modal.css.map */
-
+  /*# sourceMappingURL=bottom-modal.css.map */
 </style>
 
 <div id="modal-top-container">
@@ -336,7 +342,7 @@ option {
   <!-- Slider -->
 
   <script>
-    var exports = {}
+    var exports = {};
   </script>
   <script>
     "use strict";
@@ -432,11 +438,11 @@ var clear = function () {
     });
 };
 var showBackButton = function () {
-    document.querySelectorAll('#indicator .side').forEach(function (side) {
-        side.setAttribute('style', 'display: block;');
+    document.querySelectorAll("#indicator .side").forEach(function (side) {
+        side.setAttribute("style", "display: block;");
     });
-    document.querySelector('#indicator').removeAttribute('style');
-    var backButton = document.querySelector('#indicator .back');
+    document.querySelector("#indicator").removeAttribute("style");
+    var backButton = document.querySelector("#indicator .back");
     backButton.onclick = function () { return __awaiter(void 0, void 0, void 0, function () {
         var currentTileInfo;
         return __generator(this, function (_a) {
@@ -575,7 +581,6 @@ var requestCurrentTileInfo = function () {
         window.addEventListener("message", function (_a) {
             var data = _a.data;
             if (data.action === "response-current-tile-info") {
-                registerDefaultEventListener();
                 resolve(data.payload);
             }
         });
@@ -745,14 +750,14 @@ var registerSelectTopDressingUI = function (info) {
     // Material configuration
     var materialIndicators = selectTopDressing.querySelectorAll("#topdressing-material > div");
     materialIndicators.forEach(function (indicator) {
-        var amountConfig = indicator.querySelector('input');
+        var amountConfig = indicator.querySelector("input");
         amountConfig.oninput = function (event) {
             // Do some data stuff
         };
     });
     // Top Dressing Depth
     var topDressingDepthIndicator = selectTopDressing.querySelector("#topDressing-depth span");
-    var topDressingDepthConfig = selectTopDressing.querySelector('#topDressing-depth input');
+    var topDressingDepthConfig = selectTopDressing.querySelector("#topDressing-depth input");
     topDressingDepthConfig.oninput = function (event) {
         var depth = event.target.value.toString();
         if (Number(event.target.value) < 10) {
@@ -773,29 +778,38 @@ var registerSelectTopDressingUI = function (info) {
     topDressingDepthConfig.value = info.topdressing.depth.toString();
     topDressingDepthIndicator.innerText = "\uC2DC\uBE44 \uAE4A\uC774: ".concat(info.topdressing.depth);
     materialIndicators.forEach(function (indicator) {
-        var amountConfig = indicator.querySelector('input');
-        amountConfig.value = info.topdressing.material[indicator.id.replace('topdressing-', '')].toString();
+        var amountConfig = indicator.querySelector("input");
+        amountConfig.value =
+            info.topdressing.material[indicator.id.replace("topdressing-", "")].toString();
     });
 };
 /**<============== End Top Dressing <================*/
 // Main
+var isShowModal = false;
+var getIsShowModal = function () {
+    return isShowModal;
+};
+var setIsShowModal = function (isShowModal) {
+    isShowModal = isShowModal;
+};
 var registerDefaultEventListener = function () {
-    window.addEventListener('message', function (_a) {
+    window.addEventListener("message", function (_a) {
         var data = _a.data;
-        var root = document.querySelector('#modal-top-container');
-        if (data.action === 'show-crop-ui') {
-            if (root.getAttribute('style') !== 'display: flex;') {
-                root.setAttribute('style', 'display: flex;');
-                if (data.payload.crop) {
-                    registerSelectStatusUI(data.payload);
-                }
-                else {
-                    registerCropSelectionUI();
-                }
+        var root = document.querySelector("#modal-top-container");
+        var isShowModal = getIsShowModal();
+        if (isShowModal === false && data.action === "show-crop-ui") {
+            setIsShowModal(true);
+            root.setAttribute("style", "display: flex;");
+            if (data.payload.crop) {
+                registerSelectStatusUI(data.payload);
+            }
+            else {
+                registerCropSelectionUI();
             }
         }
-        if (data.action === 'hide-crop-ui') {
-            root.setAttribute('style', 'display: none;');
+        else if (isShowModal === true && data.action === "hide-crop-ui") {
+            setIsShowModal(false);
+            root.setAttribute("style", "display: none;");
         }
     });
 };

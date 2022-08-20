@@ -14,14 +14,14 @@ import type {
 
 const landTileInfos: Record<string, LandTileInfo> = {};
 
-const createLandTileInfo = (range: LandTileInfo['range']): void => {
-  const id = Date.now().toString()
+const createLandTileInfo = (range: LandTileInfo["range"]): void => {
+  const id = Date.now().toString();
   landTileInfos[id] = {
     id,
     range,
     progress: 0,
     irrigation: {
-      amount: 0
+      amount: 0,
     },
     topdressing: {
       material: {
@@ -35,15 +35,15 @@ const createLandTileInfo = (range: LandTileInfo['range']): void => {
       Japonica: 0,
       Tomato: 0,
       Corn: 0,
-    }
-  }
-}
+    },
+  };
+};
 
 for (let i = 0; i < 3; i++) {
-    createLandTileInfo({
-        x: [i * 10, (i + 1) * 10],
-        y: [i * 10, (i + 1) * 10],
-    });
+  createLandTileInfo({
+    x: [i * 10, (i + 1) * 10],
+    y: [i * 10, (i + 1) * 10],
+  });
 }
 
 const actionCreatorGame = <T = any>(action: ActionType, payload: T) => {
@@ -82,7 +82,9 @@ const reducer = (
       player.storage = JSON.stringify(storage);
       break;
     case "request-current-tile-info":
-      widget.sendMessage(actionCreatorGame('response-current-tile-info', tileInfo));
+      widget.sendMessage(
+        actionCreatorGame("response-current-tile-info", tileInfo)
+      );
       break;
     default:
       break;
@@ -135,17 +137,19 @@ ScriptApp.onUpdate.Add((ds) => {
     return
   }
   ScriptApp.players.map((player) => {
-    const storage: UserStorage = JSON.parse(player.storage)
-    player.showCenterLabel(player.storage)
+    const storage: UserStorage = JSON.parse(player.storage);
+    // player.showCenterLabel(player.storage);
     Object.values(storage.tileInfos).forEach((tileInfo) => {
-      notOnLand = notOnLand && registerLandTileListener(player, tileInfo)
-    })
+      notOnLand = notOnLand && registerLandTileListener(player, tileInfo);
+    });
     if (notOnLand) {
-      player.tag.timeModal.sendMessage(actionCreatorGame("hide-crop-ui", null))
-      player.tag.bottomModal.sendMessage(actionCreatorGame("hide-crop-ui", null))
+      player.tag.timeModal.sendMessage(actionCreatorGame("hide-crop-ui", null));
+      player.tag.bottomModal.sendMessage(
+        actionCreatorGame("hide-crop-ui", null)
+      );
     }
-  })
-})
+  });
+});
 
 /**<============== End Initializing <================*/
 
@@ -155,11 +159,11 @@ const getCurrentTile = (storage: UserStorage): LandTileInfo | undefined =>
   storage.tileInfos[storage.currentTileId];
 
 // Add listeners for land tiles
-const registerLandTileListener = (player: ScriptPlayer, {
-  id,
-  range,
-}: LandTileInfo): boolean => {
-  const [x, y] = [player.tileX, player.tileY]
+const registerLandTileListener = (
+  player: ScriptPlayer,
+  { id, range }: LandTileInfo
+): boolean => {
+  const [x, y] = [player.tileX, player.tileY];
   const [xmin, xmax] = range.x;
   const [ymin, ymax] = range.y;
   if (between(x, xmin, xmax) && between(y, ymin, ymax)) {
@@ -167,19 +171,15 @@ const registerLandTileListener = (player: ScriptPlayer, {
     storage.currentTileId = id;
     player.storage = JSON.stringify(storage);
     player.save();
-    const currentTile = storage.tileInfos[id]
+    const currentTile = storage.tileInfos[id];
     const tag: UserTag = player.tag;
-    tag.bottomModal.sendMessage(
-      actionCreatorGame("show-crop-ui", currentTile)
-    );
-    tag.timeModal.sendMessage(
-      actionCreatorGame("show-crop-ui", currentTile)
-    );
+    tag.bottomModal.sendMessage(actionCreatorGame("show-crop-ui", currentTile));
+    // tag.timeModal.sendMessage(actionCreatorGame("show-crop-ui", currentTile));
     // On land
-    return false
+    return false;
   }
   // Not on land
-  return true
+  return true;
 };
 
 // 앱 시작시간

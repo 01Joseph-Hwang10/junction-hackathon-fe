@@ -91,11 +91,11 @@ var clear = function () {
     });
 };
 var showBackButton = function () {
-    document.querySelectorAll('#indicator .side').forEach(function (side) {
-        side.setAttribute('style', 'display: block;');
+    document.querySelectorAll("#indicator .side").forEach(function (side) {
+        side.setAttribute("style", "display: block;");
     });
-    document.querySelector('#indicator').removeAttribute('style');
-    var backButton = document.querySelector('#indicator .back');
+    document.querySelector("#indicator").removeAttribute("style");
+    var backButton = document.querySelector("#indicator .back");
     backButton.onclick = function () { return __awaiter(void 0, void 0, void 0, function () {
         var currentTileInfo;
         return __generator(this, function (_a) {
@@ -234,7 +234,6 @@ var requestCurrentTileInfo = function () {
         window.addEventListener("message", function (_a) {
             var data = _a.data;
             if (data.action === "response-current-tile-info") {
-                registerDefaultEventListener();
                 resolve(data.payload);
             }
         });
@@ -404,14 +403,14 @@ var registerSelectTopDressingUI = function (info) {
     // Material configuration
     var materialIndicators = selectTopDressing.querySelectorAll("#topdressing-material > div");
     materialIndicators.forEach(function (indicator) {
-        var amountConfig = indicator.querySelector('input');
+        var amountConfig = indicator.querySelector("input");
         amountConfig.oninput = function (event) {
             // Do some data stuff
         };
     });
     // Top Dressing Depth
     var topDressingDepthIndicator = selectTopDressing.querySelector("#topDressing-depth span");
-    var topDressingDepthConfig = selectTopDressing.querySelector('#topDressing-depth input');
+    var topDressingDepthConfig = selectTopDressing.querySelector("#topDressing-depth input");
     topDressingDepthConfig.oninput = function (event) {
         var depth = event.target.value.toString();
         if (Number(event.target.value) < 10) {
@@ -432,29 +431,38 @@ var registerSelectTopDressingUI = function (info) {
     topDressingDepthConfig.value = info.topdressing.depth.toString();
     topDressingDepthIndicator.innerText = "\uC2DC\uBE44 \uAE4A\uC774: ".concat(info.topdressing.depth);
     materialIndicators.forEach(function (indicator) {
-        var amountConfig = indicator.querySelector('input');
-        amountConfig.value = info.topdressing.material[indicator.id.replace('topdressing-', '')].toString();
+        var amountConfig = indicator.querySelector("input");
+        amountConfig.value =
+            info.topdressing.material[indicator.id.replace("topdressing-", "")].toString();
     });
 };
 /**<============== End Top Dressing <================*/
 // Main
+var isShowModal = false;
+var getIsShowModal = function () {
+    return isShowModal;
+};
+var setIsShowModal = function (isShowModal) {
+    isShowModal = isShowModal;
+};
 var registerDefaultEventListener = function () {
-    window.addEventListener('message', function (_a) {
+    window.addEventListener("message", function (_a) {
         var data = _a.data;
-        var root = document.querySelector('#modal-top-container');
-        if (data.action === 'show-crop-ui') {
-            if (root.getAttribute('style') !== 'display: flex;') {
-                root.setAttribute('style', 'display: flex;');
-                if (data.payload.crop) {
-                    registerSelectStatusUI(data.payload);
-                }
-                else {
-                    registerCropSelectionUI();
-                }
+        var root = document.querySelector("#modal-top-container");
+        var isShowModal = getIsShowModal();
+        if (isShowModal === false && data.action === "show-crop-ui") {
+            setIsShowModal(true);
+            root.setAttribute("style", "display: flex;");
+            if (data.payload.crop) {
+                registerSelectStatusUI(data.payload);
+            }
+            else {
+                registerCropSelectionUI();
             }
         }
-        if (data.action === 'hide-crop-ui') {
-            root.setAttribute('style', 'display: none;');
+        else if (isShowModal === true && data.action === "hide-crop-ui") {
+            setIsShowModal(false);
+            root.setAttribute("style", "display: none;");
         }
     });
 };

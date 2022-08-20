@@ -1,6 +1,6 @@
-/**
- * Copyright (c) 2022 ZEP Co., LTD
- */
+// /**
+//  * Copyright (c) 2022 ZEP Co., LTD
+//  */
 
 import "zep-script";
 import { ScriptPlayer, ScriptWidget } from "zep-script";
@@ -39,12 +39,14 @@ const createLandTileInfo = (range: LandTileInfo['range']): void => {
   }
 }
 
-new Array(3).fill(0).map((_, i) => createLandTileInfo({
-  x: [i * 10, (i + 1) * 10],
-  y: [i * 10, (i + 1) * 10],
-}))
+for (let i = 0; i < 3; i++) {
+    createLandTileInfo({
+        x: [i * 10, (i + 1) * 10],
+        y: [i * 10, (i + 1) * 10],
+    });
+}
 
-const actionCreator = <T = any>(action: ActionType, payload: T) => {
+const actionCreatorGame = <T = any>(action: ActionType, payload: T) => {
   return {
     action,
     payload,
@@ -66,10 +68,10 @@ const reducer = (
   player: ScriptPlayer,
   action: Action
 ) => {
+  const storage: UserStorage = JSON.parse(player.storage);
+  const tileInfo = getCurrentTile(storage);
   switch (action.action) {
     case "add-irrigation":
-      const storage: UserStorage = JSON.parse(player.storage);
-      const tileInfo = getCurrentTile(storage);
       tileInfo.irrigation.amount++;
       storage.tileInfos[storage.currentTileId] = tileInfo;
       player.storage = JSON.stringify(storage);
@@ -80,8 +82,7 @@ const reducer = (
       player.storage = JSON.stringify(storage);
       break;
     case "request-current-tile-info":
-      const currentTile = getCurrentTile(JSON.parse(player.storage));
-      widget.sendMessage(currentTile);
+      widget.sendMessage(actionCreatorGame('response-current-tile-info', tileInfo));
       break;
     default:
       break;
@@ -91,23 +92,22 @@ const reducer = (
 // Add control panels and indicators
 ScriptApp.onJoinPlayer.Add((player) => {
   // Declare widgets
-  const topIndicator = player.showWidget(
+  const bottomModal = player.showWidget(
     "bottom-modal.html",
     "bottom",
     1200,
     420
   );
-  const bottomModal = player.showWidget("top-indicator.html", "top", 300, 50);
+  // const bottomModal = player.showWidget("top-indicator.html", "top", 300, 50);
   const timeModal = player.showWidget("time-modal.html", "top", 350, 80);
 
   // Add listeners
+  // addListenerTo(bottomModal, reducer);
   addListenerTo(bottomModal, reducer);
-  addListenerTo(topIndicator, reducer);
   addListenerTo(timeModal, reducer);
 
   // Add widgets as tags
   player.tag = {
-    topIndicator,
     bottomModal,
     timeModal,
   } as UserTag;
@@ -121,42 +121,59 @@ ScriptApp.onJoinPlayer.Add((player) => {
 
   // Save
   player.save();
+  player.sendUpdated();
 });
+
+ScriptApp.onUpdate.Add(() => {
+  ScriptApp.players.map((player) => {
+    const storage: UserStorage = JSON.parse(player.storage)
+    player.showCenterLabel(player.storage)
+    let notOnLand = true;
+    Object.values(storage.tileInfos).forEach((tileInfo) => {
+      notOnLand = notOnLand && registerLandTileListener(player, tileInfo)
+    })
+    if (notOnLand) {
+      player.tag.timeModal.sendMessage(actionCreatorGame("hide-crop-ui", null))
+      player.tag.bottomModal.sendMessage(actionCreatorGame("hide-crop-ui", null))
+    }
+  })
+})
 
 /**<============== End Initializing <================*/
 
 const between = (x: number, min: number, max: number) => x >= min && x <= max;
 
-const getCurrentTile = (storage: UserStorage) =>
+const getCurrentTile = (storage: UserStorage): LandTileInfo | undefined =>
   storage.tileInfos[storage.currentTileId];
 
 // Add listeners for land tiles
-const registerLandTileListener = ({
+const registerLandTileListener = (player: ScriptPlayer, {
   id,
   range,
-}: LandTileInfo) => {
-  // Update current tile info when player touches the tile
-  ScriptApp.onObjectTouched.Add((sender, x, y) => {
-    const [xmin, xmax] = range.x;
-    const [ymin, ymax] = range.y;
-    if (between(x, xmin, xmax) && between(y, ymin, ymax)) {
-      const storage: UserStorage = JSON.parse(sender.storage || "{}");
-      storage.currentTileId = id;
-      sender.storage = JSON.stringify(storage);
-      sender.save();
-      const currentTile = storage.tileInfos[id]
-      const tag: UserTag = sender.tag;
-      tag.bottomModal.sendMessage(
-        actionCreator("show-crop-ui", currentTile)
-      );
-      tag.topIndicator.sendMessage(
-        actionCreator("show-crop-ui", currentTile)
-      );
-    }
-  });
+}: LandTileInfo): boolean => {
+  const [x, y] = [player.tileX, player.tileY]
+  const [xmin, xmax] = range.x;
+  const [ymin, ymax] = range.y;
+  if (between(x, xmin, xmax) && between(y, ymin, ymax)) {
+    const storage: UserStorage = JSON.parse(player.storage || "{}");
+    storage.currentTileId = id;
+    player.storage = JSON.stringify(storage);
+    player.save();
+    const currentTile = storage.tileInfos[id]
+    const tag: UserTag = player.tag;
+    ScriptApp.showCenterLabel(currentTile.id)
+    tag.bottomModal.sendMessage(
+      actionCreatorGame("show-crop-ui", currentTile)
+    );
+    tag.timeModal.sendMessage(
+      actionCreatorGame("show-crop-ui", currentTile)
+    );
+    // On land
+    return false
+  }
+  // Not on land
+  return true
 };
-
-Object.values(landTileInfos).map((tileInfo) => registerLandTileListener(tileInfo));
 
 // 앱 시작시간
 const app_start_date = new Date();
@@ -203,7 +220,7 @@ ScriptApp.onJoinPlayer.Add((sender) => {
     const formattedDate = `${years}년 ${months}월 ${days}일 ${type} <span id="real-time">${hours}:${minutes}:${seconds}</span>`;
     const tag: UserTag = sender.tag;
     tag.timeModal.sendMessage(
-      actionCreator("update-current-time", formattedDate)
+      actionCreatorGame("update-current-time", formattedDate)
     );
   }, 1000 / (area_date_multiply_value + 1));
 });

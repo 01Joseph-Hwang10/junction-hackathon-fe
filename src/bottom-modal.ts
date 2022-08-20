@@ -24,7 +24,7 @@ import {
 
 /**==============> Utilities ================>*/
 
-const actionCreator = <T = any>(action: ActionType, payload: T) => {
+const actionCreatorBottomModal = <T = any>(action: ActionType, payload: T) => {
   return {
     action,
     payload,
@@ -41,7 +41,6 @@ const show = (selector: string) => {
   document.querySelector(selector).setAttribute("style", "display: flex;");
 };
 
-<<<<<<< HEAD
 const showBackButton = () => {
   document.querySelectorAll('#indicator .side').forEach((side) => {
     side.setAttribute('style', 'display: block;')
@@ -53,17 +52,6 @@ const showBackButton = () => {
     registerSelectStatusUI(currentTileInfo)
   }
 }
-=======
-const showBackButton = (info: LandTileInfo) => {
-  document.querySelectorAll("#indicator .side").forEach((side) => {
-    side.setAttribute("style", "display: block;");
-  });
-  document.querySelector("#indicator").removeAttribute("style");
-  const backButton: HTMLHeadingElement =
-    document.querySelector("#indicator .back");
-  backButton.onclick = () => registerSelectStatusUI(info);
-};
->>>>>>> 1f222b1ef875acf25c9e3c1385196e7c39eb702e
 
 const hideBackButton = () => {
   document.querySelectorAll("#indicator .side").forEach((side) => {
@@ -218,16 +206,18 @@ const appendOptions = <T extends Record<any, any>>(
 
 /**==============> CropSelection ================>*/
 
-const requestCurrentTileInfo = (): Promise<LandTileInfo> =>
-  new Promise((resolve) => {
+const requestCurrentTileInfo = (): Promise<LandTileInfo> => {
+  let window = globalThis.window;
+  return new Promise((resolve) => {
     window.addEventListener("message", ({ data }: { data: Action }) => {
       if (data.action === "response-current-tile-info") {
         registerDefaultEventListener();
         resolve(data.payload);
       }
     });
-    window.postMessage(actionCreator("request-current-tile-info", null));
+    globalThis.window.postMessage(actionCreatorBottomModal("request-current-tile-info", null));
   });
+}
 
 const registerCropSelectionUI = () => {
   // Initialize UI
@@ -372,7 +362,7 @@ const registerSelectIrrigationUI = (info: LandTileInfo) => {
     "#add-irrigation button"
   );
   addIrrigationButton.onclick = () => {
-    window.postMessage(actionCreator("add-irrigation", null));
+    window.postMessage(actionCreatorBottomModal("add-irrigation", null));
   };
 
   if (info.irrigation.method) {
@@ -449,12 +439,17 @@ const registerSelectTopDressingUI = (info: LandTileInfo) => {
 
 const registerDefaultEventListener = () => {
   window.addEventListener('message', ({data}: {data: Action<LandTileInfo>}) => {
+    const root = document.querySelector('#modal-top-container')
     if (data.action === 'show-crop-ui') {
+      root.setAttribute('style', 'display: flex;')
       if (data.payload.crop) {
         registerSelectStatusUI(data.payload);
       } else {
         registerCropSelectionUI();
       }
+    }
+    if (data.action === 'hide-crop-ui') {
+      root.setAttribute('style', 'display: none;')
     }
   });
 };

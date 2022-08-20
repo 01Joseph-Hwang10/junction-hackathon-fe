@@ -57,9 +57,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-exports.__esModule = true;
 /**==============> Utilities ================>*/
-var actionCreator = function (action, payload) {
+var actionCreatorBottomModal = function (action, payload) {
     return {
         action: action,
         payload: payload
@@ -213,6 +212,7 @@ var appendOptions = function (options, to) {
 /**<============== End Appenders <================*/
 /**==============> CropSelection ================>*/
 var requestCurrentTileInfo = function () {
+    var window = globalThis.window;
     return new Promise(function (resolve) {
         window.addEventListener("message", function (_a) {
             var data = _a.data;
@@ -221,7 +221,7 @@ var requestCurrentTileInfo = function () {
                 resolve(data.payload);
             }
         });
-        window.postMessage(actionCreator("request-current-tile-info", null));
+        globalThis.window.postMessage(actionCreatorBottomModal("request-current-tile-info", null));
     });
 };
 var registerCropSelectionUI = function () {
@@ -340,7 +340,7 @@ var registerSelectIrrigationUI = function (info) {
     // Add Irrigation
     var addIrrigationButton = selectIrrigation.querySelector("#add-irrigation button");
     addIrrigationButton.onclick = function () {
-        window.postMessage(actionCreator("add-irrigation", null));
+        window.postMessage(actionCreatorBottomModal("add-irrigation", null));
     };
     if (info.irrigation.method) {
         irrigationMethodOptions.forEach(function (option) {
@@ -404,13 +404,18 @@ var registerSelectTopDressingUI = function (info) {
 var registerDefaultEventListener = function () {
     window.addEventListener('message', function (_a) {
         var data = _a.data;
+        var root = document.querySelector('#modal-top-container');
         if (data.action === 'show-crop-ui') {
+            root.setAttribute('style', 'display: flex;');
             if (data.payload.crop) {
                 registerSelectStatusUI(data.payload);
             }
             else {
                 registerCropSelectionUI();
             }
+        }
+        if (data.action === 'hide-crop-ui') {
+            root.setAttribute('style', 'display: none;');
         }
     });
 };

@@ -9,6 +9,7 @@ export type ManageType =
 
 export type ActionType = 
   | 'show-crop-ui'
+  | 'hide-crop-ui'
   | "update-current-tile-info" 
   | "update-current-time"
   | 'add-irrigation'
@@ -84,6 +85,5 @@ export interface UserStorage {
 
 export interface UserTag {
   bottomModal: ScriptWidget;
-  topIndicator: ScriptWidget;
   timeModal: ScriptWidget;
 }

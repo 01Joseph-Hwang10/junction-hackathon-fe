@@ -38,15 +38,13 @@ section
 
 .container
     padding: 0.5rem 0
-    h4
-        padding: 0.5rem 0
-        filter: greyscale(0.2)
-
-.container
     @include center()
     width: 100%
     display: flex
     flex-direction: column
+    h4
+        padding: 0.5rem 0
+        filter: greyscale(0.2)
 .container.left
     justify-content: start
     align-items: start
@@ -84,3 +82,19 @@ option
     display: flex
     justify-content: start
     align-items: center
+
+#status
+    width: 100%
+    display: flex
+    flex-direction: column
+    justify-content: start
+    align-items: center
+    padding-top: 0.5rem
+    div
+        width: 100%
+        display: flex
+        justify-content: start
+        align-items: center
+        h4
+            filter: greyscale(0.2)
+

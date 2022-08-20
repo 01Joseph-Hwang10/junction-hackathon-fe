@@ -33,19 +33,20 @@ export interface LandTileInfo {
      */
     degree: number;
   };
-  irrigation?: {
-    method: any;
-    /**
-     * Unit: cm
-     */
-    depth: number;
-  };
+  /**
+   * 0 ~ 1 (강수량)
+   */
+  irrigation?: number;
+  /**
+   * 0 ~ 1 for each attribute (시비량)
+   * 3 attribute should sum up as 1
+   */
   topdressing?: {
-    method: any;
-    fertilizer: any;
-    amount: number;
+    nitro: number;
+    phosphorus: number;
+    cali: number;
   };
-  plowing?: any;
+  plowing?: number;
 }
 
 export interface UserStorage {

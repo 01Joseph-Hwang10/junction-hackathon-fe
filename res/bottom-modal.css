@@ -50,19 +50,16 @@ section {
 
 .container {
   padding: 0.5rem 0;
-}
-.container h4 {
-  padding: 0.5rem 0;
-  filter: greyscale(0.2);
-}
-
-.container {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   display: flex;
   flex-direction: column;
+}
+.container h4 {
+  padding: 0.5rem 0;
+  filter: greyscale(0.2);
 }
 
 .container.left {
@@ -112,6 +109,24 @@ option {
   display: flex;
   justify-content: start;
   align-items: center;
+}
+
+#status {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  padding-top: 0.5rem;
+}
+#status div {
+  width: 100%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+#status div h4 {
+  filter: greyscale(0.2);
 }
 
 /*# sourceMappingURL=bottom-modal.css.map */

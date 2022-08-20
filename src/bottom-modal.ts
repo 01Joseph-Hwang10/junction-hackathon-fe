@@ -191,7 +191,7 @@ const registerSelectStatusUI = (info: LandTileInfo) => {
   const buttons = appendButtonCards(actions, selectStatus)
   const [sowButton, irrigationButton, topDressingButton, plowingButton, harvestButton] = buttons
   sowButton.onclick = () => registerSelectSowUI(info)
-  irrigationButton.onclick = () => registerSelectIrrigationUI(info)
+  irrigationButton.onclick = () => {}
   topDressingButton.onclick = () => registerSelectTopDressingUI(info)
   plowingButton.onclick = () => {} // Some Action when plowing
   harvestButton.onclick = () => {} // Some Action when harvest
@@ -199,6 +199,7 @@ const registerSelectStatusUI = (info: LandTileInfo) => {
 
 /**<============== End Select Status <================*/
 
+/**==============> Select Sow ================>*/
 
 const registerSelectSowUI = (info: LandTileInfo) => {
   // Initialize UI
@@ -251,11 +252,7 @@ const registerSelectSowUI = (info: LandTileInfo) => {
   }
 };
 
-/**==============> Irrigation ================>*/
-
-const registerSelectIrrigationUI = (info: LandTileInfo) => {}
-
-/**<============== End Irrigation <================*/
+/**<============== End Select Sow <================*/
 
 /**==============> Top Dressing ================>*/
 

@@ -158,12 +158,13 @@ var registerSelectStatusUI = function (info) {
     var buttons = appendButtonCards(actions, selectStatus);
     var sowButton = buttons[0], irrigationButton = buttons[1], topDressingButton = buttons[2], plowingButton = buttons[3], harvestButton = buttons[4];
     sowButton.onclick = function () { return registerSelectSowUI(info); };
-    irrigationButton.onclick = function () { return registerSelectIrrigationUI(info); };
+    irrigationButton.onclick = function () { };
     topDressingButton.onclick = function () { return registerSelectTopDressingUI(info); };
     plowingButton.onclick = function () { }; // Some Action when plowing
     harvestButton.onclick = function () { }; // Some Action when harvest
 };
 /**<============== End Select Status <================*/
+/**==============> Select Sow ================>*/
 var registerSelectSowUI = function (info) {
     // Initialize UI
     clear();
@@ -214,9 +215,7 @@ var registerSelectSowUI = function (info) {
         sowDegreeIndicator.innerText = "\uD30C\uC885 \uAC01\uB3C4: ".concat(info.sow.degree);
     }
 };
-/**==============> Irrigation ================>*/
-var registerSelectIrrigationUI = function (info) { };
-/**<============== End Irrigation <================*/
+/**<============== End Select Sow <================*/
 /**==============> Top Dressing ================>*/
 var registerSelectTopDressingUI = function (info) { };
 /**<============== End Top Dressing <================*/

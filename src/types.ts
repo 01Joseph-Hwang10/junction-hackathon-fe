@@ -3,15 +3,38 @@ import { ScriptWidget } from 'zep-script';
 export type ManageType = 'sow' | 'irrigation' | 'topdressing' | 'plowing' | 'harvest';
 
 export type ActionType =
-  | 'show-crop-ui'
-  | 'hide-crop-ui'
   | 'update-current-tile-info'
   | 'update-current-time'
-  | 'add-irrigation'
-  | 'add-plowing'
   | 'request-current-tile-info'
   | 'response-current-tile-info'
-  | 'harvest';
+
+  | 'show-crop-ui'
+  | 'hide-crop-ui'
+
+  | 'add-irrigation'
+  | 'add-plowing'
+  // Harvest
+  | 'harvest'
+  // Current Time
+  | 'current-time'
+  // Set land tile infos
+  | 'set-crop'
+  | 'set-sow'
+  | 'set-irrigation'
+  | 'set-topdressing'
+  | 'set-plowing'
+  | 'set-inventory'
+  // Object control
+  | 'overwrite-object'
+
+export interface AppObject {
+  x: number;
+  y: number;
+  /**
+   * Start from `res`
+   */
+  filePath: string;
+}
 
 export interface Action<T = any> {
   action: ActionType;

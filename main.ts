@@ -3,8 +3,8 @@
 //  */
 
 import 'zep-script';
-import { ScriptPlayer, ScriptWidget } from 'zep-script';
-import type { Action, ActionType, LandTileInfo, UserStorage, UserTag } from './src/types';
+import { ScriptDynamicResource, ScriptPlayer, ScriptWidget } from 'zep-script';
+import type { Action, ActionType, AppObject, LandTileInfo, UserStorage, UserTag } from './src/types';
 
 const landTileInfos: Record<string, LandTileInfo> = {};
 
@@ -55,6 +55,22 @@ const addListenerTo = (
   widget.onMessage.Add((sender, data) => callback(widget, sender, data));
 };
 
+const appObjects: Record<string, ScriptDynamicResource> = {}
+
+/**
+ * 
+ * @param objectInfo <- `action.payload`
+ */
+const overwriteObjects = (objectInfo: AppObject[]) => {
+  ScriptMap.clearAllObjects()
+  for (const info of objectInfo) {
+    if (!appObjects[info.filePath]) {
+      appObjects[info.filePath] = ScriptApp.loadSpritesheet(info.filePath);
+    }
+    ScriptMap.putObject(info.x, info.y, appObjects[info.filePath]);
+  }
+}
+
 /**==============> Initializing ================>*/
 
 const reducer = (widget: ScriptWidget, player: ScriptPlayer, action: Action) => {
@@ -74,6 +90,39 @@ const reducer = (widget: ScriptWidget, player: ScriptPlayer, action: Action) => 
     case 'request-current-tile-info':
       widget.sendMessage(actionCreatorGame('response-current-tile-info', tileInfo));
       break;
+    case 'set-crop':
+      tileInfo.crop = action.payload;
+      storage.tileInfos[storage.currentTileId] = tileInfo;
+      player.storage = JSON.stringify(storage);
+      break
+    case 'set-topdressing':
+      tileInfo.topdressing = action.payload;
+      storage.tileInfos[storage.currentTileId] = tileInfo;
+      player.storage = JSON.stringify(storage);
+      break
+    case 'set-inventory':
+      tileInfo.inventory = action.payload;
+      storage.tileInfos[storage.currentTileId] = tileInfo;
+      player.storage = JSON.stringify(storage);
+      break
+    case 'set-irrigation':
+      tileInfo.irrigation = action.payload;
+      storage.tileInfos[storage.currentTileId] = tileInfo;
+      player.storage = JSON.stringify(storage);
+      break
+    case 'set-plowing':
+      tileInfo.plowing = action.payload;
+      storage.tileInfos[storage.currentTileId] = tileInfo;
+      player.storage = JSON.stringify(storage);
+      break
+    case 'set-sow':
+      tileInfo.sow = action.payload;
+      storage.tileInfos[storage.currentTileId] = tileInfo;
+      player.storage = JSON.stringify(storage);
+      break
+    case 'overwrite-object':
+      overwriteObjects(action.payload);
+      break
     default:
       break;
   }
@@ -109,26 +158,12 @@ ScriptApp.onJoinPlayer.Add((player) => {
   player.sendUpdated();
 });
 
-let notOnLand = true;
-
-let acc = 0;
-
-ScriptApp.onUpdate.Add((ds) => {
-  acc += ds;
-  if (acc > 100) {
-    acc = 0;
-    return;
-  }
+ScriptApp.onUpdate.Add(() => {
   ScriptApp.players.map((player) => {
-    const storage: UserStorage = JSON.parse(player.storage);
-    // player.showCenterLabel(player.storage);
-    Object.values(storage.tileInfos).forEach((tileInfo) => {
-      notOnLand = notOnLand && registerLandTileListener(player, tileInfo);
-    });
-    if (notOnLand) {
-      player.tag.timeModal.sendMessage(actionCreatorGame('hide-crop-ui', null));
-      player.tag.bottomModal.sendMessage(actionCreatorGame('hide-crop-ui', null));
-    }
+    const tag: UserTag = player.tag;
+    const currentTime = {x: player.tileX, y: player.tileY}
+    tag.bottomModal.sendMessage(actionCreatorGame('current-time', currentTime));
+    tag.timeModal.sendMessage(actionCreatorGame('current-time', currentTime));
   });
 });
 

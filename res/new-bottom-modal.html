@@ -1,0 +1,43 @@
+<head>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <script src="https://unpkg.com/styled-components@4.0.1/dist/styled-components.min.js"></script>
+</head>
+
+<body>
+  <div id="new-bottom-modal"></div>
+</body>
+
+<script type="text/babel">
+  const { useState, useEffect } = React;
+
+  const Modal = () => {
+    const [count, setCount] = useState(0);
+    const [data, setData] = useState(null);
+
+    useEffect(() => {
+      const handler = (e) => {
+        setData(JSON.stringify(e.data, null, 2));
+      };
+      window.addEventListener('message', handler);
+
+      return () => {
+        window.removeEventListener('message', handler);
+      };
+    }, []);
+
+    return <Container onClick={() => window.parent.postMessage({ action: 'test' }, '*')}>{data}</Container>;
+  };
+
+  const Container = styled.div`
+    display: flex;
+    padding: 100px;
+    background-color: red;
+    justify-content: center;
+    align-items: center;
+  `;
+
+  const dom = document.getElementById('new-bottom-modal');
+  ReactDOM.createRoot(dom).render(<Modal />);
+</script>

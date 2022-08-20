@@ -171,8 +171,22 @@ const appendButtonCards = <T extends Record<any, any>>(
   for (const card of Object.keys(items)) {
     const clone = document.importNode(buttonCard.content, true);
     const button: HTMLButtonElement = clone.querySelector('.card');
-    button.setAttribute('to', card);
-    button.setAttribute('style', `width: ${100 / items.length}%;`);
+    // button.setAttribute('to', card);
+    if (type === 'crop-selection') {
+      console.log('crop-selection');
+      const selectCrop = async () => {
+        const crop: CropType = card as CropType;
+        window.postMessage(actionCreatorBottomModal('set-crop', crop), '*');
+        const currentTileInfo: LandTileInfo = await requestCurrentTileInfo();
+        registerSelectStatusUI({
+          ...currentTileInfo,
+          crop,
+        });
+      }
+      button.setAttribute('onclick', 'selectCrop()');
+      button.onclick = selectCrop
+    }
+    // button.setAttribute('style', `width: ${100 / Object.keys(items).length}%;`);
     const span = clone.querySelector('span');
     span.innerHTML =
       type === 'crop-selection'
@@ -223,7 +237,7 @@ const requestCurrentTileInfo = (): Promise<LandTileInfo> => {
         resolve(data.payload);
       }
     });
-    window.postMessage(actionCreatorBottomModal('request-current-tile-info', null));
+    window.postMessage(actionCreatorBottomModal('request-current-tile-info', null), '*');
   });
 };
 
@@ -242,17 +256,7 @@ const registerCropSelectionUI = () => {
 
   // Crop Selection
   const selectCrop = document.querySelector('#select-crop');
-  const buttons = appendButtonCards('crop-selection', cropSelection, selectCrop);
-  buttons.forEach((button) => {
-    button.onclick = async () => {
-      const crop: CropType = button.getAttribute('to') as CropType;
-      const currentTileInfo: LandTileInfo = await requestCurrentTileInfo();
-      registerSelectStatusUI({
-        ...currentTileInfo,
-        crop,
-      });
-    };
-  });
+  appendButtonCards('crop-selection', cropSelection, selectCrop);
 };
 
 /**<============== End CropSelection <================*/
@@ -364,7 +368,7 @@ const registerSelectIrrigationUI = (info: LandTileInfo) => {
   // Add Irrigation
   const addIrrigationButton: HTMLButtonElement = selectIrrigation.querySelector('#add-irrigation button');
   addIrrigationButton.onclick = () => {
-    window.postMessage(actionCreatorBottomModal('add-irrigation', null));
+    window.postMessage(actionCreatorBottomModal('add-irrigation', null), '*');
   };
 
   if (info.irrigation.method) {

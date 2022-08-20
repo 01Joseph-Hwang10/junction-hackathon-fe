@@ -40,7 +40,7 @@ const clearState = () => {
   selectTopdressingOpened = false;
   selectPlowingOpened = false;
   selectHarvestOpened = false;
-}
+};
 
 /**<============== End States <================*/
 
@@ -64,16 +64,17 @@ const clear = () => {
 };
 
 const showBackButton = () => {
-  document.querySelectorAll('#indicator .side').forEach((side) => {
-    side.setAttribute('style', 'display: block;')
-  })
-  document.querySelector('#indicator').removeAttribute('style')
-  const backButton: HTMLHeadingElement = document.querySelector('#indicator .back')
+  document.querySelectorAll("#indicator .side").forEach((side) => {
+    side.setAttribute("style", "display: block;");
+  });
+  document.querySelector("#indicator").removeAttribute("style");
+  const backButton: HTMLHeadingElement =
+    document.querySelector("#indicator .back");
   backButton.onclick = async () => {
     const currentTileInfo = await requestCurrentTileInfo();
-    registerSelectStatusUI(currentTileInfo)
-  }
-}
+    registerSelectStatusUI(currentTileInfo);
+  };
+};
 
 const hideBackButton = () => {
   document.querySelectorAll("#indicator .side").forEach((side) => {
@@ -236,13 +237,15 @@ const requestCurrentTileInfo = (): Promise<LandTileInfo> => {
         resolve(data.payload);
       }
     });
-    window.postMessage(actionCreatorBottomModal("request-current-tile-info", null));
+    window.postMessage(
+      actionCreatorBottomModal("request-current-tile-info", null)
+    );
   });
-}
+};
 
 const registerCropSelectionUI = () => {
   if (selectCropOpened) return;
-  clearState()
+  clearState();
   selectCropOpened = true;
   // Initialize UI
   clear();
@@ -278,7 +281,7 @@ const registerCropSelectionUI = () => {
 
 const registerSelectStatusUI = (info: LandTileInfo) => {
   if (selectStatusOpened) return;
-  clearState()
+  clearState();
   selectStatusOpened = true;
   // Initialize UI
   clear();
@@ -314,12 +317,12 @@ const registerSelectStatusUI = (info: LandTileInfo) => {
 
 const registerSelectSowUI = (info: LandTileInfo) => {
   if (selectSowOpened) return;
-  clearState()
+  clearState();
   selectSowOpened = true;
   // Initialize UI
   clear();
   show("#select-sow");
-  showBackButton()
+  showBackButton();
 
   const selectSow = document.querySelector("#select-sow");
   // Sow methods
@@ -374,12 +377,12 @@ const registerSelectSowUI = (info: LandTileInfo) => {
 
 const registerSelectIrrigationUI = (info: LandTileInfo) => {
   if (selectIrrigationOpened) return;
-  clearState()
+  clearState();
   selectIrrigationOpened = true;
   // Initialize UI
   clear();
   show("#select-irrigation");
-  showBackButton()
+  showBackButton();
 
   const selectIrrigation = document.querySelector("#select-irrigation");
   // Irrigation methods
@@ -415,12 +418,12 @@ const registerSelectIrrigationUI = (info: LandTileInfo) => {
 
 const registerSelectTopDressingUI = (info: LandTileInfo) => {
   if (selectTopdressingOpened) return;
-  clearState()
+  clearState();
   selectTopdressingOpened = true;
   // Initialize UI
   clear();
   show("#select-topdressing");
-  showBackButton()
+  showBackButton();
 
   const selectTopDressing = document.querySelector("#select-topdressing");
   // Top Dressing methods
@@ -433,24 +436,27 @@ const registerSelectTopDressingUI = (info: LandTileInfo) => {
   );
 
   // Material configuration
-  const materialIndicators: NodeListOf<HTMLDivElement> = selectTopDressing.querySelectorAll("#topdressing-material > div");
+  const materialIndicators: NodeListOf<HTMLDivElement> =
+    selectTopDressing.querySelectorAll("#topdressing-material > div");
   materialIndicators.forEach((indicator: HTMLDivElement) => {
-    const amountConfig: HTMLInputElement = indicator.querySelector('input')
+    const amountConfig: HTMLInputElement = indicator.querySelector("input");
     amountConfig.oninput = (event: any) => {
       // Do some data stuff
-    }
-  })
+    };
+  });
 
   // Top Dressing Depth
-  const topDressingDepthIndicator: HTMLSpanElement = selectTopDressing.querySelector("#topDressing-depth span");
-  const topDressingDepthConfig: HTMLInputElement = selectTopDressing.querySelector('#topDressing-depth input')
+  const topDressingDepthIndicator: HTMLSpanElement =
+    selectTopDressing.querySelector("#topDressing-depth span");
+  const topDressingDepthConfig: HTMLInputElement =
+    selectTopDressing.querySelector("#topDressing-depth input");
   topDressingDepthConfig.oninput = (event: any) => {
     let depth = event.target.value.toString();
     if (Number(event.target.value) < 10) {
       depth = "&nbsp;" + depth;
     }
     topDressingDepthIndicator.innerHTML = `시비 깊이: ${depth}`;
-  }
+  };
 
   if (info.topdressing.method) {
     topDressingMethodOptions.forEach((option: HTMLOptionElement) => {
@@ -464,30 +470,48 @@ const registerSelectTopDressingUI = (info: LandTileInfo) => {
   topDressingDepthConfig.value = info.topdressing.depth.toString();
   topDressingDepthIndicator.innerText = `시비 깊이: ${info.topdressing.depth}`;
   materialIndicators.forEach((indicator: HTMLDivElement) => {
-    const amountConfig: HTMLInputElement = indicator.querySelector('input')
-    amountConfig.value = info.topdressing.material[indicator.id.replace('topdressing-', '')].toString();
-  })
-}
+    const amountConfig: HTMLInputElement = indicator.querySelector("input");
+    amountConfig.value =
+      info.topdressing.material[
+        indicator.id.replace("topdressing-", "")
+      ].toString();
+  });
+};
 
 /**<============== End Top Dressing <================*/
 
 // Main
 
+let isShowModal = false;
+
+const getIsShowModal = () => {
+  return isShowModal;
+};
+
+const setIsShowModal = (isShowModal: boolean) => {
+  isShowModal = isShowModal;
+};
+
 const registerDefaultEventListener = () => {
-  window.addEventListener('message', ({data}: {data: Action<LandTileInfo>}) => {
-    const root = document.querySelector('#modal-top-container')
-    if (data.action === 'show-crop-ui') {
-      root.setAttribute('style', 'display: flex;')
-      if (data.payload.crop) {
-        registerSelectStatusUI(data.payload);
-      } else {
-        registerCropSelectionUI();
+  window.addEventListener(
+    "message",
+    ({ data }: { data: Action<LandTileInfo> }) => {
+      const root = document.querySelector("#modal-top-container");
+      const isShowModal = getIsShowModal();
+      if (isShowModal === false && data.action === "show-crop-ui") {
+        setIsShowModal(true);
+        root.setAttribute("style", "display: flex;");
+        if (data.payload.crop) {
+          registerSelectStatusUI(data.payload);
+        } else {
+          registerCropSelectionUI();
+        }
+      } else if (isShowModal === true && data.action === "hide-crop-ui") {
+        setIsShowModal(false);
+        root.setAttribute("style", "display: none;");
       }
     }
-    if (data.action === 'hide-crop-ui') {
-      root.setAttribute('style', 'display: none;')
-    }
-  });
+  );
 };
 
 registerDefaultEventListener();

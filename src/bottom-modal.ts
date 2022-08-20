@@ -232,7 +232,6 @@ const requestCurrentTileInfo = (): Promise<LandTileInfo> => {
   return new Promise((resolve) => {
     window.addEventListener("message", ({ data }: { data: Action }) => {
       if (data.action === "response-current-tile-info") {
-        registerDefaultEventListener();
         resolve(data.payload);
       }
     });
@@ -473,21 +472,12 @@ const registerSelectTopDressingUI = (info: LandTileInfo) => {
 
 // Main
 
-const registerDefaultEventListener = () => {
-  window.addEventListener('message', ({data}: {data: Action<LandTileInfo>}) => {
-    const root = document.querySelector('#modal-top-container')
-    if (data.action === 'show-crop-ui') {
-      root.setAttribute('style', 'display: flex;')
-      if (data.payload.crop) {
-        registerSelectStatusUI(data.payload);
-      } else {
-        registerCropSelectionUI();
-      }
+window.addEventListener('message', ({data}: {data: Action<LandTileInfo>}) => {
+  if (data.action === 'show-crop-ui') {
+    if (data.payload.crop) {
+      registerSelectStatusUI(data.payload)
+    } else {
+      registerCropSelectionUI()
     }
-    if (data.action === 'hide-crop-ui') {
-      root.setAttribute('style', 'display: none;')
-    }
-  });
-};
-
-registerDefaultEventListener();
+  }
+})

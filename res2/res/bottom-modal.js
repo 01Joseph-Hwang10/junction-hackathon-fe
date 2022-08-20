@@ -443,12 +443,14 @@ var registerDefaultEventListener = function () {
         var data = _a.data;
         var root = document.querySelector('#modal-top-container');
         if (data.action === 'show-crop-ui') {
-            root.setAttribute('style', 'display: flex;');
-            if (data.payload.crop) {
-                registerSelectStatusUI(data.payload);
-            }
-            else {
-                registerCropSelectionUI();
+            if (root.getAttribute('style') !== 'display: flex;') {
+                root.setAttribute('style', 'display: flex;');
+                if (data.payload.crop) {
+                    registerSelectStatusUI(data.payload);
+                }
+                else {
+                    registerCropSelectionUI();
+                }
             }
         }
         if (data.action === 'hide-crop-ui') {

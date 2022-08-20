@@ -126,7 +126,14 @@ ScriptApp.onJoinPlayer.Add((player) => {
 
 let notOnLand = true;
 
-ScriptApp.onUpdate.Add(() => {
+let acc = 0;
+
+ScriptApp.onUpdate.Add((ds) => {
+  acc += ds
+  if (acc > 100) {
+    acc = 0
+    return
+  }
   ScriptApp.players.map((player) => {
     const storage: UserStorage = JSON.parse(player.storage)
     player.showCenterLabel(player.storage)

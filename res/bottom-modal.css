@@ -1,6 +1,14 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap");
 h1, h2, h3, h4, h5, h6, p, span {
   padding: 0;
   margin: 0;
+  color: lavenderblush;
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+button {
+  background-color: transparent;
+  border: none;
 }
 
 #modal {
@@ -40,13 +48,23 @@ section {
   align-items: center;
 }
 
-.container .center {
+.container {
+  padding: 0.5rem 0;
+}
+.container h4 {
+  padding: 0.5rem 0;
+  filter: greyscale(0.2);
+}
+
+.container.center {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   width: 100%;
 }
-.container .left {
+
+.container.left {
   display: flex;
   flex-direction: column;
   justify-content: start;
@@ -62,6 +80,11 @@ section {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  min-height: 5rem;
+}
+.card:hover {
+  cursor: pointer;
+  filter: brightness(1.2);
 }
 
 /*# sourceMappingURL=bottom-modal.css.map */

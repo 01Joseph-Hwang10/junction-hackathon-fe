@@ -3,29 +3,7 @@
  */
 
 import "zep-script";
-
-/**==============> Typedefs ================>*/
-
-type CropType = 'japonica' | 'tomato' | 'corn';
-
-interface LandTileInfo {
-    id: number;
-    range: {
-        x: number[];
-        y: number[];
-    };
-    crop?: CropType;
-    /**
-    * 0 ~ 1
-    */
-    progress: number;
-}
-
-interface UserStorage {
-    tileInfos: Record<string, LandTileInfo>;
-}
-
-/**<============== End Typedefs <================*/
+import { CropType, LandTileInfo, UserStorage } from "./src/types";
 
 /**==============> Initializing ================>*/
 
@@ -47,18 +25,18 @@ ScriptApp.onJoinPlayer.Add((player) => {
 
 /**==============> UI Components ================>*/
 
-const cropSelection: CropType[] = [
-    'japonica',
-    'tomato',
-    'corn',
-]
+const cropSelection: Record<CropType, string> = {
+    'Japonica': '쌀',
+    'Tomato': '토마토',
+    'Corn': '옥수수',
+}
 
 const registerUIComponents = () => {
     const buttonCard: HTMLTemplateElement = document.querySelector('#button-card');
 
     // Add Crop Selection UI at empty crop section
     const emptyCrop = document.querySelector('#empty-crop');
-    for (const crop in cropSelection) {
+    for (const crop of Object.keys(cropSelection)) {
         const clone = document.importNode(buttonCard.content, true);
         clone.querySelector('span').innerText = crop
         const cards = emptyCrop.querySelector('.cards')
@@ -68,6 +46,7 @@ const registerUIComponents = () => {
 
 /**<============== End UI Components <================*/
 
+const between = (x: number, min: number, max: number) => x >= min && x <= max;
 
 // Add listeners for land tiles
 const registerLandTileListener = ({id, range, crop, progress}: LandTileInfo) => {
@@ -86,7 +65,9 @@ const registerLandTileListener = ({id, range, crop, progress}: LandTileInfo) => 
 
   // Update current tile info when player touches the tile
   ScriptApp.onObjectTouched.Add((sender, x, y, tileID) => {
-    if (range.x.includes(x) && range.y.includes(y)) {
+    const [xmin, xmax]  = range.x;
+    const [ymin, ymax] = range.y;
+    if (between(x, xmin, xmax) && between(y, ymin, ymax)) {
         const storage: UserStorage = JSON.parse(sender.storage || "{}");
         window.localStorage.setItem('CurrentTileInfo', JSON.stringify(storage.tileInfos[id]));
         window.dispatchEvent(new StorageEvent('storage', {

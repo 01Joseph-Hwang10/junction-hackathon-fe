@@ -1,18 +1,52 @@
-export type CropType = 'japonica' | 'tomato' | 'corn';
+export type ActionType = 
+    | 'sow'
+    | 'irrigation'
+    | 'topdressing'
+    | 'plowing'
+    | 'harvest'
+
+export type CropType = 'Japonica' | 'Tomato' | 'Corn';
+
+export type SowMethod = 'direct' | 'indirect';
+export type SowGap = 
+    | 'narrow' // 한(64*32) 타일에 3개
+    | 'wide'; // 한(64*32) 타일에 2개
 
 export interface LandTileInfo {
-    id: number;
+    id: string;
     range: {
-        x: number[];
-        y: number[];
+        x: [number, number];
+        y: [number, number];
     };
     crop?: CropType;
     /**
     * 0 ~ 1
     */
     progress: number;
+    sow?: {
+        method: SowMethod;
+        gap: SowGap;
+        /**
+         * 0 ~ 360 (no radian)
+         */
+        degree: number;
+    }
+    irrigation?: {
+        method: any;
+        /**
+         * Unit: cm
+         */
+        depth: number;
+    }
+    topdressing?: {
+        method: any;
+        fertilizer: any;
+        amount: number;
+    }
+    plowing?: any;
 }
 
 export interface UserStorage {
     tileInfos: Record<string, LandTileInfo>;
+    currentTileInfo?: LandTileInfo;
 }

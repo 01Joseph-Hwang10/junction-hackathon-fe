@@ -1,11 +1,5 @@
-h1, h2, h3, h4, h5, h6, p, span
-    padding: 0
-    margin: 0
-    
-@mixin center()
-    display: flex
-    justify-content: center
-    align-items: center
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap')
+@import "common.sass"
     
 #modal
     // width: 100%
@@ -43,10 +37,16 @@ section
     align-items: center
 
 .container
-    .center
-        @include center()
+    padding: 0.5rem 0
+    h4
+        padding: 0.5rem 0
+        filter: greyscale(0.2)
+
+.container.center
+        @include center
+        flex-direction: column
         width: 100%
-    .left
+.container.left
         display: flex
         flex-direction: column
         justify-content: start
@@ -59,4 +59,7 @@ section
     margin: 0px 5px
     @include center
     flex-direction: column
-        
+    min-height: 5rem
+    &:hover
+        cursor: pointer
+        filter: brightness(1.2)

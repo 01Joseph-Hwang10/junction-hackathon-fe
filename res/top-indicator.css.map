@@ -1,1 +1,1 @@
-{"version":3,"sourceRoot":"","sources":["top-indicator.sass"],"names":[],"mappings":"AAAA;EACI;EACA;EACA","file":"top-indicator.css"}
+{"version":3,"sourceRoot":"","sources":["common.sass","top-indicator.sass"],"names":[],"mappings":"AAAA;EACI;EACA;EACA;EACA;;;AAEJ;EACI;EACA;;;ACNJ;EACI;EACA;EACA","file":"top-indicator.css"}

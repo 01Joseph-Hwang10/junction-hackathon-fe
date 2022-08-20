@@ -10,16 +10,16 @@
     - #select-sow <- 파종 설정
     - #select-irrigation <- 관개 설정
     - #select-topdressing <- 시비 설정
-    - #select-cultivation <- 경작 설정
+    - #select-plowing <- 경작 설정
  -->
 
 <div id="modal">
   <!-- Indicator -->
-  <h1 id="indicator"></h1>
+  <h2 id="indicator"></h2>
   <!-- 작물 선택 -->
   <section id="select-crop" class="empty-crop">
     <div class="container center">
-      <h2>농작물 선택</h2>
+      <h4>농작물 선택</h4>
       <div class="cards cards-horizontal"></div>
     </div>
   </section>
@@ -27,12 +27,12 @@
   <section id="select-status" class="has-crop" style="display: none;">
     <!-- Progress -->
     <div class="container center">
-      <h2>농작물 생육 정도</h2>
-      <progress value="0"></progress>
+      <h4>농작물 생육 정도</h4>
+      <progress max="100" value="0"></progress>
     </div>
     <!-- Actions -->
     <div class="container center">
-      <h2>관리하기</h2>
+      <h4>관리하기</h4>
       <div class="cards cards-horizontal"></div>
     </div>
   </section>
@@ -40,10 +40,10 @@
 
 <!-- Button Card -->
 <template id="button-card">
-  <div class="card">
+  <button class="card">
     <img />
     <span></span>
-  </div>
+  </button>
 </template>
 
 <!-- This is for test -->

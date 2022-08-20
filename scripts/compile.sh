@@ -1,3 +1,3 @@
 #!/bin/sh
 
-tsc --outDir ./res $1 && python scripts/remove-undefined.py
+tsc --outDir ./res2/res $1 && python scripts/remove-undefined.py

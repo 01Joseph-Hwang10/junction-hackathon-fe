@@ -1,6 +1,6 @@
 import os
 
-SRC = os.path.join(os.path.dirname(__file__), '..', 'res')
+SRC = os.path.join(os.path.dirname(__file__), '..', 'res2/res')
 
 for filename in os.listdir(SRC):
     filepath = os.path.join(SRC, filename)

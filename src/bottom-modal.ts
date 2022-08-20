@@ -31,14 +31,20 @@ const actionCreatorBottomModal = <T = any>(action: ActionType, payload: T) => {
   };
 };
 
-const clear = () => {
-  document.querySelectorAll("section").forEach((section) => {
-    section.setAttribute("style", "display: none;");
-  });
-};
-
 const show = (selector: string) => {
   document.querySelector(selector).setAttribute("style", "display: flex;");
+};
+
+const clear = (id: string): boolean => {
+  let shouldRender = true;
+  document.querySelectorAll("section").forEach((section) => {
+    if (section.id === id && section.getAttribute('style') === 'display: flex;') {
+      shouldRender = false
+      return;
+    }
+    section.setAttribute("style", "display: none;");
+  });
+  return shouldRender
 };
 
 const showBackButton = () => {
@@ -207,7 +213,6 @@ const appendOptions = <T extends Record<any, any>>(
 /**==============> CropSelection ================>*/
 
 const requestCurrentTileInfo = (): Promise<LandTileInfo> => {
-  let window = globalThis.window;
   return new Promise((resolve) => {
     window.addEventListener("message", ({ data }: { data: Action }) => {
       if (data.action === "response-current-tile-info") {
@@ -215,13 +220,14 @@ const requestCurrentTileInfo = (): Promise<LandTileInfo> => {
         resolve(data.payload);
       }
     });
-    globalThis.window.postMessage(actionCreatorBottomModal("request-current-tile-info", null));
+    window.postMessage(actionCreatorBottomModal("request-current-tile-info", null));
   });
 }
 
 const registerCropSelectionUI = () => {
   // Initialize UI
-  clear();
+  const shouldRender = clear('select-crop');
+  if (!shouldRender) return;
   show("#select-crop");
   hideBackButton();
 
@@ -254,7 +260,8 @@ const registerCropSelectionUI = () => {
 
 const registerSelectStatusUI = (info: LandTileInfo) => {
   // Initialize UI
-  clear();
+  const shouldRender = clear('select-status');
+  if (!shouldRender) return;
   show("#select-status");
   hideBackButton();
 
@@ -287,7 +294,8 @@ const registerSelectStatusUI = (info: LandTileInfo) => {
 
 const registerSelectSowUI = (info: LandTileInfo) => {
   // Initialize UI
-  clear();
+  const shouldRender = clear('select-sow');
+  if (!shouldRender) return;
   show("#select-sow");
   showBackButton()
 
@@ -344,7 +352,8 @@ const registerSelectSowUI = (info: LandTileInfo) => {
 
 const registerSelectIrrigationUI = (info: LandTileInfo) => {
   // Initialize UI
-  clear();
+  const shouldRender = clear('select-irrigation');
+  if (!shouldRender) return;
   show("#select-irrigation");
   showBackButton()
 
@@ -382,7 +391,8 @@ const registerSelectIrrigationUI = (info: LandTileInfo) => {
 
 const registerSelectTopDressingUI = (info: LandTileInfo) => {
   // Initialize UI
-  clear();
+  const shouldRender = clear('select-topdressing');
+  if (!shouldRender) return;
   show("#select-topdressing");
   showBackButton()
 

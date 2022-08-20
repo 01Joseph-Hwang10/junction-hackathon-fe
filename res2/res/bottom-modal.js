@@ -64,13 +64,19 @@ var actionCreatorBottomModal = function (action, payload) {
         payload: payload
     };
 };
-var clear = function () {
-    document.querySelectorAll("section").forEach(function (section) {
-        section.setAttribute("style", "display: none;");
-    });
-};
 var show = function (selector) {
     document.querySelector(selector).setAttribute("style", "display: flex;");
+};
+var clear = function (id) {
+    var shouldRender = true;
+    document.querySelectorAll("section").forEach(function (section) {
+        if (section.id === id && section.getAttribute('style') === 'display: flex;') {
+            shouldRender = false;
+            return;
+        }
+        section.setAttribute("style", "display: none;");
+    });
+    return shouldRender;
 };
 var showBackButton = function () {
     document.querySelectorAll('#indicator .side').forEach(function (side) {
@@ -212,7 +218,6 @@ var appendOptions = function (options, to) {
 /**<============== End Appenders <================*/
 /**==============> CropSelection ================>*/
 var requestCurrentTileInfo = function () {
-    var window = globalThis.window;
     return new Promise(function (resolve) {
         window.addEventListener("message", function (_a) {
             var data = _a.data;
@@ -221,12 +226,14 @@ var requestCurrentTileInfo = function () {
                 resolve(data.payload);
             }
         });
-        globalThis.window.postMessage(actionCreatorBottomModal("request-current-tile-info", null));
+        window.postMessage(actionCreatorBottomModal("request-current-tile-info", null));
     });
 };
 var registerCropSelectionUI = function () {
     // Initialize UI
-    clear();
+    var shouldRender = clear('select-crop');
+    if (!shouldRender)
+        return;
     show("#select-crop");
     hideBackButton();
     // Indicator
@@ -256,7 +263,9 @@ var registerCropSelectionUI = function () {
 /**==============> Select Status ================>*/
 var registerSelectStatusUI = function (info) {
     // Initialize UI
-    clear();
+    var shouldRender = clear('select-status');
+    if (!shouldRender)
+        return;
     show("#select-status");
     hideBackButton();
     // Title Statement
@@ -278,7 +287,9 @@ var registerSelectStatusUI = function (info) {
 /**<============== End Select Status <================*/
 var registerSelectSowUI = function (info) {
     // Initialize UI
-    clear();
+    var shouldRender = clear('select-sow');
+    if (!shouldRender)
+        return;
     show("#select-sow");
     showBackButton();
     var selectSow = document.querySelector("#select-sow");
@@ -330,7 +341,9 @@ var registerSelectSowUI = function (info) {
 /**==============> Irrigation ================>*/
 var registerSelectIrrigationUI = function (info) {
     // Initialize UI
-    clear();
+    var shouldRender = clear('select-irrigation');
+    if (!shouldRender)
+        return;
     show("#select-irrigation");
     showBackButton();
     var selectIrrigation = document.querySelector("#select-irrigation");
@@ -357,7 +370,9 @@ var registerSelectIrrigationUI = function (info) {
 /**==============> Top Dressing ================>*/
 var registerSelectTopDressingUI = function (info) {
     // Initialize UI
-    clear();
+    var shouldRender = clear('select-topdressing');
+    if (!shouldRender)
+        return;
     show("#select-topdressing");
     showBackButton();
     var selectTopDressing = document.querySelector("#select-topdressing");

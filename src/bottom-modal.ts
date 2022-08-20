@@ -20,7 +20,7 @@ import {
   Action,
   IrrigationMethod,
   FertilizationMethod,
-} from "./types";
+} from './types';
 
 /**==============> States ================>*/
 
@@ -54,22 +54,21 @@ const actionCreatorBottomModal = <T = any>(action: ActionType, payload: T) => {
 };
 
 const show = (selector: string) => {
-  document.querySelector(selector).setAttribute("style", "display: flex;");
+  document.querySelector(selector).setAttribute('style', 'display: flex;');
 };
 
 const clear = () => {
-  document.querySelectorAll("section").forEach((section) => {
-    section.setAttribute("style", "display: none;");
+  document.querySelectorAll('section').forEach((section) => {
+    section.setAttribute('style', 'display: none;');
   });
 };
 
 const showBackButton = () => {
-  document.querySelectorAll("#indicator .side").forEach((side) => {
-    side.setAttribute("style", "display: block;");
+  document.querySelectorAll('#indicator .side').forEach((side) => {
+    side.setAttribute('style', 'display: block;');
   });
-  document.querySelector("#indicator").removeAttribute("style");
-  const backButton: HTMLHeadingElement =
-    document.querySelector("#indicator .back");
+  document.querySelector('#indicator').removeAttribute('style');
+  const backButton: HTMLHeadingElement = document.querySelector('#indicator .back');
   backButton.onclick = async () => {
     const currentTileInfo = await requestCurrentTileInfo();
     registerSelectStatusUI(currentTileInfo);
@@ -77,129 +76,119 @@ const showBackButton = () => {
 };
 
 const hideBackButton = () => {
-  document.querySelectorAll("#indicator .side").forEach((side) => {
-    side.setAttribute("style", "display: none;");
+  document.querySelectorAll('#indicator .side').forEach((side) => {
+    side.setAttribute('style', 'display: none;');
   });
 };
 
 const setIndicator = (statement: string) => {
-  const indicator: HTMLHeadingElement =
-    document.querySelector("#indicator .title");
+  const indicator: HTMLHeadingElement = document.querySelector('#indicator .title');
   indicator.innerHTML = statement;
 };
 
 const setSubIndicator = (statement: string) => {
-  const indicator: HTMLHeadingElement = document.querySelector(
-    "#indicator .subtitle"
-  );
+  const indicator: HTMLHeadingElement = document.querySelector('#indicator .subtitle');
   indicator.innerHTML = statement;
 };
 
-const getStatusStatement = (crop: string) =>
-  `${crop}<normal>을 심은 농지</normal>`;
+const getStatusStatement = (crop: string) => `${crop}<normal>을 심은 농지</normal>`;
 
-const getButtonCard = (): HTMLTemplateElement =>
-  document.querySelector("#button-card");
+const getButtonCard = (): HTMLTemplateElement => document.querySelector('#button-card');
 
-const getOption = (): HTMLTemplateElement => document.querySelector("#option");
+const getOption = (): HTMLTemplateElement => document.querySelector('#option');
 
 /**<============== End Utilities <================*/
 
 /**==============> Constants ================>*/
 
 const iconSelection: Record<CropType, string> = {
-  Japonica: "https://d3yor8z393217.cloudfront.net/rice.svg",
-  Tomato: "https://d3yor8z393217.cloudfront.net/tomato.svg",
-  Corn: "https://d3yor8z393217.cloudfront.net/corn.svg",
+  Japonica: 'https://d3yor8z393217.cloudfront.net/rice.svg',
+  Tomato: 'https://d3yor8z393217.cloudfront.net/tomato.svg',
+  Corn: 'https://d3yor8z393217.cloudfront.net/corn.svg',
 };
 
 const cropSelection: Record<CropType, string> = {
-  Japonica: "쌀",
-  Tomato: "토마토",
-  Corn: "옥수수",
+  Japonica: '쌀',
+  Tomato: '토마토',
+  Corn: '옥수수',
 };
 
 const actions: Record<ManageType, string> = {
-  sow: "파종",
-  irrigation: "관개",
-  topdressing: "시비",
-  plowing: "경운",
-  harvest: "수확",
+  sow: '파종',
+  irrigation: '관개',
+  topdressing: '시비',
+  plowing: '경운',
+  harvest: '수확',
 };
 
 const descriptionActions: Record<ManageType, string> = {
-  sow: "파종을 하면 작물을 심을 수 있습니다.",
-  irrigation: "관개를 하면 작물을 물을 수 있습니다.",
-  topdressing: "시비를 하면 작물에 비료를 줄 수 있습니다.",
-  plowing: "경운을 하면 작물을 흙으로 뒤집을 수 있습니다.",
-  harvest: "수확을 하면 작물을 수확할 수 있습니다.",
+  sow: '파종을 하면 작물을 심을 수 있습니다.',
+  irrigation: '관개를 하면 작물을 물을 수 있습니다.',
+  topdressing: '시비를 하면 작물에 비료를 줄 수 있습니다.',
+  plowing: '경운을 하면 작물을 흙으로 뒤집을 수 있습니다.',
+  harvest: '수확을 하면 작물을 수확할 수 있습니다.',
 };
 
 const sowMethod: Record<SowMethod, string> = {
-  direct: "직접",
-  indirect: "간접",
+  direct: '직접',
+  indirect: '간접',
 };
 
 const sowGap: Record<SowGap, string> = {
-  narrow: "좁게",
-  wide: "넓게",
+  narrow: '좁게',
+  wide: '넓게',
 };
 
 const irrigationMethod: Record<IrrigationMethod, string> = {
-  Flood: "Flood",
-  Sprinkler: "Sprinkler",
-  Furrow: "Furrow",
+  Flood: 'Flood',
+  Sprinkler: 'Sprinkler',
+  Furrow: 'Furrow',
 };
 
 const topDressingMethod: Record<FertilizationMethod, string> = {
-  "applied-in-irrigation-water": "관개수식",
-  "band-on-soil": "밴드식",
-  "banded-on-beneath-surface": "묻는 방식",
+  'applied-in-irrigation-water': '관개수식',
+  'band-on-soil': '밴드식',
+  'banded-on-beneath-surface': '묻는 방식',
 };
 
 /**<============== End Constants <================*/
 
 /**==============> Appenders ================>*/
 
-type AppendButtonType = "crop-selection" | "actions";
+type AppendButtonType = 'crop-selection' | 'actions';
 
 const appendButtonCards = <T extends Record<any, any>>(
   type: AppendButtonType,
   items: T,
-  to: Element
+  to: Element,
 ): HTMLButtonElement[] => {
   // Clear cards
-  const cards = to.querySelectorAll(".card");
+  const cards = to.querySelectorAll('.card');
   cards.forEach((card) => card.remove());
 
   // Attach cards
   const buttonCard = getButtonCard();
   for (const card of Object.keys(items)) {
     const clone = document.importNode(buttonCard.content, true);
-    const button: HTMLButtonElement = clone.querySelector(".card");
-    button.setAttribute("to", card);
-    button.setAttribute("style", `width: ${100 / items.length}%;`);
-    const span = clone.querySelector("span");
+    const button: HTMLButtonElement = clone.querySelector('.card');
+    button.setAttribute('to', card);
+    button.setAttribute('style', `width: ${100 / items.length}%;`);
+    const span = clone.querySelector('span');
     span.innerHTML =
-      type === "crop-selection"
+      type === 'crop-selection'
         ? `<div class="button-wrap"><img src="${iconSelection[card]}" /><span>${items[card]}</span></div>`
         : `<div class="button-wrap"><span>${items[card]}</span><div class="popup">${descriptionActions[card]}</div></div>`;
-    const cards = to.querySelector(".cards");
+    const cards = to.querySelector('.cards');
     cards.appendChild(clone);
   }
   const buttons: HTMLButtonElement[] = [];
-  to.querySelectorAll("button.card").forEach((button: HTMLButtonElement) =>
-    buttons.push(button)
-  );
+  to.querySelectorAll('button.card').forEach((button: HTMLButtonElement) => buttons.push(button));
   return buttons;
 };
 
-const appendOptions = <T extends Record<any, any>>(
-  options: T,
-  to: Element
-): HTMLOptionElement[] => {
+const appendOptions = <T extends Record<any, any>>(options: T, to: Element): HTMLOptionElement[] => {
   // Clear options
-  const optionsElement = to.querySelectorAll("option");
+  const optionsElement = to.querySelectorAll('option');
   optionsElement.forEach((option, index) => {
     if (index === 0) {
       option.selected = true;
@@ -212,16 +201,14 @@ const appendOptions = <T extends Record<any, any>>(
   const optionTemplate = getOption();
   for (const item of Object.keys(options)) {
     const clone = document.importNode(optionTemplate.content, true);
-    const span = clone.querySelector("span");
+    const span = clone.querySelector('span');
     span.innerText = options[item];
-    const option = clone.querySelector("option");
+    const option = clone.querySelector('option');
     option.value = item;
     to.appendChild(clone);
   }
   const opts: HTMLOptionElement[] = [];
-  to.querySelectorAll("option").forEach((opt: HTMLOptionElement) =>
-    opts.push(opt)
-  );
+  to.querySelectorAll('option').forEach((opt: HTMLOptionElement) => opts.push(opt));
   return opts;
 };
 
@@ -231,14 +218,12 @@ const appendOptions = <T extends Record<any, any>>(
 
 const requestCurrentTileInfo = (): Promise<LandTileInfo> => {
   return new Promise((resolve) => {
-    window.addEventListener("message", ({ data }: { data: Action }) => {
-      if (data.action === "response-current-tile-info") {
+    window.addEventListener('message', ({ data }: { data: Action }) => {
+      if (data.action === 'response-current-tile-info') {
         resolve(data.payload);
       }
     });
-    window.postMessage(
-      actionCreatorBottomModal("request-current-tile-info", null)
-    );
+    window.postMessage(actionCreatorBottomModal('request-current-tile-info', null));
   });
 };
 
@@ -248,23 +233,19 @@ const registerCropSelectionUI = () => {
   selectCropOpened = true;
   // Initialize UI
   clear();
-  show("#select-crop");
+  show('#select-crop');
   hideBackButton();
 
   // Indicator
-  setIndicator("비어있는 농지");
-  setSubIndicator("수확할 농작물을 선택해주세요.");
+  setIndicator('비어있는 농지');
+  setSubIndicator('수확할 농작물을 선택해주세요.');
 
   // Crop Selection
-  const selectCrop = document.querySelector("#select-crop");
-  const buttons = appendButtonCards(
-    "crop-selection",
-    cropSelection,
-    selectCrop
-  );
+  const selectCrop = document.querySelector('#select-crop');
+  const buttons = appendButtonCards('crop-selection', cropSelection, selectCrop);
   buttons.forEach((button) => {
     button.onclick = async () => {
-      const crop: CropType = button.getAttribute("to") as CropType;
+      const crop: CropType = button.getAttribute('to') as CropType;
       const currentTileInfo: LandTileInfo = await requestCurrentTileInfo();
       registerSelectStatusUI({
         ...currentTileInfo,
@@ -284,7 +265,7 @@ const registerSelectStatusUI = (info: LandTileInfo) => {
   selectStatusOpened = true;
   // Initialize UI
   clear();
-  show("#select-status");
+  show('#select-status');
   hideBackButton();
 
   // Title Statement
@@ -292,19 +273,13 @@ const registerSelectStatusUI = (info: LandTileInfo) => {
   setSubIndicator(`<progress max="100" value="20" ></progress>`);
 
   // Progress
-  const selectStatus = document.querySelector("#select-status");
-  const progress = selectStatus.querySelector("progress");
+  const selectStatus = document.querySelector('#select-status');
+  const progress = selectStatus.querySelector('progress');
   progress.value = info.progress * 100;
 
   // Actions
-  const buttons = appendButtonCards("actions", actions, selectStatus);
-  const [
-    sowButton,
-    irrigationButton,
-    topDressingButton,
-    plowingButton,
-    harvestButton,
-  ] = buttons;
+  const buttons = appendButtonCards('actions', actions, selectStatus);
+  const [sowButton, irrigationButton, topDressingButton, plowingButton, harvestButton] = buttons;
   sowButton.onclick = () => registerSelectSowUI(info);
   irrigationButton.onclick = () => registerSelectIrrigationUI(info);
   topDressingButton.onclick = () => registerSelectTopDressingUI(info);
@@ -320,30 +295,28 @@ const registerSelectSowUI = (info: LandTileInfo) => {
   selectSowOpened = true;
   // Initialize UI
   clear();
-  show("#select-sow");
+  show('#select-sow');
   showBackButton();
 
-  const selectSow = document.querySelector("#select-sow");
+  const selectSow = document.querySelector('#select-sow');
   // Sow methods
-  const sowMethodSelection = selectSow.querySelector("#sow-method");
+  const sowMethodSelection = selectSow.querySelector('#sow-method');
   const sowMethodOptions = appendOptions(sowMethod, sowMethodSelection);
 
   // Sow Gap
-  const sowGapSelection = selectSow.querySelector("#sow-gap");
+  const sowGapSelection = selectSow.querySelector('#sow-gap');
   appendOptions(sowGap, sowGapSelection);
-  const sowGapOptions = sowGapSelection.querySelectorAll("option");
+  const sowGapOptions = sowGapSelection.querySelectorAll('option');
 
   // Sow Degree
-  const sowDegreeIndicator: HTMLSpanElement =
-    selectSow.querySelector("#sow-degree span");
-  const sowDegreeConfig: HTMLInputElement =
-    selectSow.querySelector("#sow-degree input");
+  const sowDegreeIndicator: HTMLSpanElement = selectSow.querySelector('#sow-degree span');
+  const sowDegreeConfig: HTMLInputElement = selectSow.querySelector('#sow-degree input');
   sowDegreeConfig.oninput = (event: any) => {
     let degree = event.target.value.toString();
     if (Number(event.target.value) < 10) {
-      degree = "&nbsp;&nbsp;" + degree;
+      degree = '&nbsp;&nbsp;' + degree;
     } else if (Number(event.target.value) < 100) {
-      degree = "&nbsp;" + degree;
+      degree = '&nbsp;' + degree;
     } else {
       // pass
     }
@@ -353,16 +326,16 @@ const registerSelectSowUI = (info: LandTileInfo) => {
   if (info.sow) {
     sowMethodOptions.forEach((option: HTMLOptionElement) => {
       if (option.value === info.sow.method) {
-        option.setAttribute("selected", "true");
+        option.setAttribute('selected', 'true');
       } else {
-        option.removeAttribute("selected");
+        option.removeAttribute('selected');
       }
     });
     sowGapOptions.forEach((option: HTMLOptionElement) => {
       if (option.value === info.sow.gap) {
-        option.setAttribute("selected", "true");
+        option.setAttribute('selected', 'true');
       } else {
-        option.removeAttribute("selected");
+        option.removeAttribute('selected');
       }
     });
     sowDegreeConfig.value = info.sow.degree.toString();
@@ -380,32 +353,26 @@ const registerSelectIrrigationUI = (info: LandTileInfo) => {
   selectIrrigationOpened = true;
   // Initialize UI
   clear();
-  show("#select-irrigation");
+  show('#select-irrigation');
   showBackButton();
 
-  const selectIrrigation = document.querySelector("#select-irrigation");
+  const selectIrrigation = document.querySelector('#select-irrigation');
   // Irrigation methods
-  const irrigationMethodSelection =
-    selectIrrigation.querySelector("#sow-method");
-  const irrigationMethodOptions = appendOptions(
-    irrigationMethod,
-    irrigationMethodSelection
-  );
+  const irrigationMethodSelection = selectIrrigation.querySelector('#sow-method');
+  const irrigationMethodOptions = appendOptions(irrigationMethod, irrigationMethodSelection);
 
   // Add Irrigation
-  const addIrrigationButton: HTMLButtonElement = selectIrrigation.querySelector(
-    "#add-irrigation button"
-  );
+  const addIrrigationButton: HTMLButtonElement = selectIrrigation.querySelector('#add-irrigation button');
   addIrrigationButton.onclick = () => {
-    window.postMessage(actionCreatorBottomModal("add-irrigation", null));
+    window.postMessage(actionCreatorBottomModal('add-irrigation', null));
   };
 
   if (info.irrigation.method) {
     irrigationMethodOptions.forEach((option: HTMLOptionElement) => {
       if (option.value === info.irrigation.method) {
-        option.setAttribute("selected", "true");
+        option.setAttribute('selected', 'true');
       } else {
-        option.removeAttribute("selected");
+        option.removeAttribute('selected');
       }
     });
   }
@@ -421,38 +388,31 @@ const registerSelectTopDressingUI = (info: LandTileInfo) => {
   selectTopdressingOpened = true;
   // Initialize UI
   clear();
-  show("#select-topdressing");
+  show('#select-topdressing');
   showBackButton();
 
-  const selectTopDressing = document.querySelector("#select-topdressing");
+  const selectTopDressing = document.querySelector('#select-topdressing');
   // Top Dressing methods
-  const topDressingMethodSelection = selectTopDressing.querySelector(
-    "#topdressing-method"
-  );
-  const topDressingMethodOptions = appendOptions(
-    topDressingMethod,
-    topDressingMethodSelection
-  );
+  const topDressingMethodSelection = selectTopDressing.querySelector('#topdressing-method');
+  const topDressingMethodOptions = appendOptions(topDressingMethod, topDressingMethodSelection);
 
   // Material configuration
   const materialIndicators: NodeListOf<HTMLDivElement> =
-    selectTopDressing.querySelectorAll("#topdressing-material > div");
+    selectTopDressing.querySelectorAll('#topdressing-material > div');
   materialIndicators.forEach((indicator: HTMLDivElement) => {
-    const amountConfig: HTMLInputElement = indicator.querySelector("input");
+    const amountConfig: HTMLInputElement = indicator.querySelector('input');
     amountConfig.oninput = (event: any) => {
       // Do some data stuff
     };
   });
 
   // Top Dressing Depth
-  const topDressingDepthIndicator: HTMLSpanElement =
-    selectTopDressing.querySelector("#topDressing-depth span");
-  const topDressingDepthConfig: HTMLInputElement =
-    selectTopDressing.querySelector("#topDressing-depth input");
+  const topDressingDepthIndicator: HTMLSpanElement = selectTopDressing.querySelector('#topDressing-depth span');
+  const topDressingDepthConfig: HTMLInputElement = selectTopDressing.querySelector('#topDressing-depth input');
   topDressingDepthConfig.oninput = (event: any) => {
     let depth = event.target.value.toString();
     if (Number(event.target.value) < 10) {
-      depth = "&nbsp;" + depth;
+      depth = '&nbsp;' + depth;
     }
     topDressingDepthIndicator.innerHTML = `시비 깊이: ${depth}`;
   };
@@ -460,20 +420,17 @@ const registerSelectTopDressingUI = (info: LandTileInfo) => {
   if (info.topdressing.method) {
     topDressingMethodOptions.forEach((option: HTMLOptionElement) => {
       if (option.value === info.topdressing.method) {
-        option.setAttribute("selected", "true");
+        option.setAttribute('selected', 'true');
       } else {
-        option.removeAttribute("selected");
+        option.removeAttribute('selected');
       }
     });
   }
   topDressingDepthConfig.value = info.topdressing.depth.toString();
   topDressingDepthIndicator.innerText = `시비 깊이: ${info.topdressing.depth}`;
   materialIndicators.forEach((indicator: HTMLDivElement) => {
-    const amountConfig: HTMLInputElement = indicator.querySelector("input");
-    amountConfig.value =
-      info.topdressing.material[
-        indicator.id.replace("topdressing-", "")
-      ].toString();
+    const amountConfig: HTMLInputElement = indicator.querySelector('input');
+    amountConfig.value = info.topdressing.material[indicator.id.replace('topdressing-', '')].toString();
   });
 };
 
@@ -492,25 +449,22 @@ const setIsShowModal = (isShowModal: boolean) => {
 };
 
 const registerDefaultEventListener = () => {
-  window.addEventListener(
-    "message",
-    ({ data }: { data: Action<LandTileInfo> }) => {
-      const root = document.querySelector("#modal-top-container");
-      const isShowModal = getIsShowModal();
-      if (isShowModal === false && data.action === "show-crop-ui") {
-        setIsShowModal(true);
-        root.setAttribute("style", "display: flex;");
-        if (data.payload.crop) {
-          registerSelectStatusUI(data.payload);
-        } else {
-          registerCropSelectionUI();
-        }
-      } else if (isShowModal === true && data.action === "hide-crop-ui") {
-        setIsShowModal(false);
-        root.setAttribute("style", "display: none;");
+  window.addEventListener('message', ({ data }: { data: Action<LandTileInfo> }) => {
+    const root = document.querySelector('#modal-top-container');
+    const isShowModal = getIsShowModal();
+    if (isShowModal === false && data.action === 'show-crop-ui') {
+      setIsShowModal(true);
+      root.setAttribute('style', 'display: flex;');
+      if (data.payload.crop) {
+        registerSelectStatusUI(data.payload);
+      } else {
+        registerCropSelectionUI();
       }
+    } else if (isShowModal === true && data.action === 'hide-crop-ui') {
+      setIsShowModal(false);
+      root.setAttribute('style', 'display: none;');
     }
-  );
+  });
 };
 
 registerDefaultEventListener();

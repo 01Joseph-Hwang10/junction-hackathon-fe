@@ -1,37 +1,32 @@
-import { ScriptWidget } from "zep-script";
+import { ScriptWidget } from 'zep-script';
 
-export type ManageType =
-  | "sow"
-  | "irrigation"
-  | "topdressing"
-  | "plowing"
-  | "harvest";
+export type ManageType = 'sow' | 'irrigation' | 'topdressing' | 'plowing' | 'harvest';
 
-export type ActionType = 
+export type ActionType =
   | 'show-crop-ui'
   | 'hide-crop-ui'
-  | "update-current-tile-info" 
-  | "update-current-time"
+  | 'update-current-tile-info'
+  | 'update-current-time'
   | 'add-irrigation'
   | 'add-plowing'
   | 'request-current-tile-info'
   | 'response-current-tile-info'
-  | 'harvest'
+  | 'harvest';
 
 export interface Action<T = any> {
   action: ActionType;
   payload: T;
 }
 
-export type CropType = "Japonica" | "Tomato" | "Corn";
+export type CropType = 'Japonica' | 'Tomato' | 'Corn';
 
-export type IrrigationMethod = "Furrow" | "Flood" | 'Sprinkler';
-export type FertilizationMethod = | 'applied-in-irrigation-water' | 'band-on-soil' | 'banded-on-beneath-surface'
+export type IrrigationMethod = 'Furrow' | 'Flood' | 'Sprinkler';
+export type FertilizationMethod = 'applied-in-irrigation-water' | 'band-on-soil' | 'banded-on-beneath-surface';
 
-export type SowMethod = "direct" | "indirect";
+export type SowMethod = 'direct' | 'indirect';
 export type SowGap =
-  | "narrow" // 한(64*32) 타일에 3개
-  | "wide"; // 한(64*32) 타일에 2개
+  | 'narrow' // 한(64*32) 타일에 3개
+  | 'wide'; // 한(64*32) 타일에 2개
 
 export interface LandTileInfo {
   id: string;
@@ -58,7 +53,7 @@ export interface LandTileInfo {
   irrigation: {
     method?: IrrigationMethod;
     amount: number;
-  }
+  };
   topdressing: {
     /**
      * 0 ~ 1 for each attribute (시비량)
@@ -68,14 +63,14 @@ export interface LandTileInfo {
       nitro: number;
       phosphorus: number;
       cali: number;
-    }
+    };
     method?: FertilizationMethod;
     depth: number;
   };
   plowing?: number;
   inventory: {
     [key in CropType]: number;
-  }
+  };
 }
 
 export interface UserStorage {

@@ -4,7 +4,13 @@
 
 import "zep-script";
 import { ScriptPlayer, ScriptWidget } from "zep-script";
-import type { Action, ActionType, LandTileInfo, UserStorage, UserTag } from "./src/types";
+import type {
+  Action,
+  ActionType,
+  LandTileInfo,
+  UserStorage,
+  UserTag,
+} from "./src/types";
 
 const landTileInfos: Record<string, LandTileInfo> = {};
 
@@ -45,47 +51,59 @@ const actionCreator = <T = any>(action: ActionType, payload: T) => {
   };
 };
 
-const addListenerTo = (widget: ScriptWidget, callback: (widget: ScriptWidget, sender: ScriptPlayer, data: Action) => void) => {
+const addListenerTo = (
+  widget: ScriptWidget,
+  callback: (widget: ScriptWidget, sender: ScriptPlayer, data: Action) => void
+) => {
   // @ts-ignore
   widget.onMessage.Add((sender, data) => callback(widget, sender, data));
-}
+};
 
 /**==============> Initializing ================>*/
 
-const reducer = (widget: ScriptWidget,player: ScriptPlayer, action: Action) => {
+const reducer = (
+  widget: ScriptWidget,
+  player: ScriptPlayer,
+  action: Action
+) => {
   switch (action.action) {
-    case 'add-irrigation':
+    case "add-irrigation":
       const storage: UserStorage = JSON.parse(player.storage);
       const tileInfo = getCurrentTile(storage);
-      tileInfo.irrigation.amount++
+      tileInfo.irrigation.amount++;
       storage.tileInfos[storage.currentTileId] = tileInfo;
       player.storage = JSON.stringify(storage);
       break;
-    case 'add-plowing':
+    case "add-plowing":
       tileInfo.plowing++;
       storage.tileInfos[storage.currentTileId] = tileInfo;
       player.storage = JSON.stringify(storage);
       break;
-    case 'request-current-tile-info':
+    case "request-current-tile-info":
       const currentTile = getCurrentTile(JSON.parse(player.storage));
-      widget.sendMessage(currentTile)
+      widget.sendMessage(currentTile);
       break;
     default:
       break;
   }
-}
+};
 
 // Add control panels and indicators
 ScriptApp.onJoinPlayer.Add((player) => {
   // Declare widgets
-  const topIndicator = player.showWidget("bottom-modal.html", "bottom", 500, 250)
-  const bottomModal = player.showWidget("top-indicator.html", "top", 300, 50)
-  const timeModal = player.showWidget("time-modal.html", "top", 350, 80)
+  const topIndicator = player.showWidget(
+    "bottom-modal.html",
+    "bottom",
+    1200,
+    420
+  );
+  const bottomModal = player.showWidget("top-indicator.html", "top", 300, 50);
+  const timeModal = player.showWidget("time-modal.html", "top", 350, 80);
 
   // Add listeners
-  addListenerTo(bottomModal, reducer)
-  addListenerTo(topIndicator, reducer)
-  addListenerTo(timeModal, reducer)
+  addListenerTo(bottomModal, reducer);
+  addListenerTo(topIndicator, reducer);
+  addListenerTo(timeModal, reducer);
 
   // Add widgets as tags
   player.tag = {

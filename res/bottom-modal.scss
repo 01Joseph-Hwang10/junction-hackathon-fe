@@ -1,19 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap");
-h1, h2, h3, h4, h5, h6, p, span {
-  padding: 0;
-  margin: 0;
-  color: #333333;
-  font-family: "Noto Sans KR", sans-serif;
-}
-
-button {
-  background-color: transparent;
-  border: none;
-}
-
-* {
-  box-sizing: border-box;
-}
+@import "common.sass";
 
 html,
 body {
@@ -44,7 +30,6 @@ body {
   align-items: center;
   padding: 0 50px;
 }
-
 .cards-vertical {
   width: 100%;
   display: flex;
@@ -52,7 +37,6 @@ body {
   justify-content: start;
   align-items: center;
 }
-
 section {
   width: 100%;
   height: 100%;
@@ -63,60 +47,59 @@ section {
 }
 
 .container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @include center();
   width: 100%;
   display: flex;
   flex-direction: column;
 }
-
 .container.left {
   justify-content: start;
   align-items: start;
 }
-
 .container.row {
   flex-direction: row;
 }
-
 #indicator {
   width: 100%;
-}
-#indicator .side {
-  min-width: 2rem;
-  color: #333333;
-}
-#indicator .side:hover {
-  cursor: pointer;
-  filter: grayscale(0.5);
-}
 
+  .side {
+    min-width: 2rem;
+    color: #333333;
+    &:hover {
+      cursor: pointer;
+      filter: grayscale(0.5);
+    }
+  }
+}
 .card {
   width: 80px;
   height: 80px;
   border-radius: 50px;
   border: 2px solid #e0e0e0;
   flex-direction: column;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: border 250ms linear;
-}
-.card span {
-  font-size: 16px;
-}
-.card:hover {
-  border-color: blue;
-}
-.card:hover .popup {
-  opacity: 1;
-}
-.card:not(:last-child) {
-  margin-right: 14px;
-}
+  @include center;
 
+  cursor: pointer;
+
+  span {
+    font-size: 16px;
+  }
+
+  transition: border 250ms linear;
+
+  &:hover {
+    border-color: blue;
+
+    .popup {
+      // display: block;
+      opacity: 1;
+    }
+  }
+
+  &:not(:last-child) {
+    margin-right: 14px;
+  }
+}
 option {
   display: flex;
   justify-content: start;
@@ -127,9 +110,9 @@ option {
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 6px;
-}
-.title normal {
-  font-weight: 400;
+  normal {
+    font-weight: 400;
+  }
 }
 
 .subtitle {
@@ -153,31 +136,34 @@ option {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-.button-wrap img {
-  width: 32px;
-  height: 32px;
-}
-.button-wrap span {
-  font-size: 14px;
-}
-.button-wrap .popup {
-  background-color: #333333;
-  position: absolute;
-  top: -80px;
-  left: -50px;
-  max-width: 370px;
-  white-space: nowrap;
-  line-break: anywhere;
-  color: white;
-  padding: 10px 14px;
-  font-size: 14px;
-  text-align: left;
-  border-radius: 12px;
-  box-shadow: 1px 1px 6px 0 rgba(0, 0, 0, 0.1);
-  letter-spacing: -0.4px;
-  opacity: 0;
-  transition: opacity 100ms ease-in-out;
+
+  img {
+    width: 32px;
+    height: 32px;
+  }
+
+  span {
+    font-size: 14px;
+  }
+
+  .popup {
+    background-color: #333333;
+    position: absolute;
+    top: -80px;
+    left: -50px;
+    max-width: 370px;
+    white-space: nowrap;
+    line-break: anywhere;
+    color: white;
+    padding: 10px 14px;
+    font-size: 14px;
+    text-align: left;
+    border-radius: 12px;
+    box-shadow: 1px 1px 6px 0 rgba(0, 0, 0, 0.1);
+    letter-spacing: -0.4px;
+    opacity: 0;
+    transition: opacity 100ms ease-in-out;
+  }
 }
 
 #modal-top-container {
@@ -187,5 +173,3 @@ option {
   align-items: center;
   padding-bottom: 80px;
 }
-
-/*# sourceMappingURL=bottom-modal.css.map */

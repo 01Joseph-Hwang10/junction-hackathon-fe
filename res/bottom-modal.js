@@ -57,6 +57,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+exports.__esModule = true;
 /**==============> Utilities ================>*/
 var actionCreator = function (action, payload) {
     return {
@@ -92,22 +93,32 @@ var showBackButton = function () {
     }); };
 };
 var hideBackButton = function () {
-    document.querySelectorAll('#indicator .side').forEach(function (side) {
-        side.setAttribute('style', 'display: none;');
+    document.querySelectorAll("#indicator .side").forEach(function (side) {
+        side.setAttribute("style", "display: none;");
     });
-    document.querySelector('#indicator').setAttribute('style', 'justify-content: center;');
 };
 var setIndicator = function (statement) {
     var indicator = document.querySelector("#indicator .title");
-    indicator.innerText = statement;
+    indicator.innerHTML = statement;
 };
-var getStatusStatement = function (crop) { return "".concat(crop, "\uC744 \uC2EC\uC740 \uB18D\uC9C0"); };
+var setSubIndicator = function (statement) {
+    var indicator = document.querySelector("#indicator .subtitle");
+    indicator.innerHTML = statement;
+};
+var getStatusStatement = function (crop) {
+    return "".concat(crop, "<normal>\uC744 \uC2EC\uC740 \uB18D\uC9C0</normal>");
+};
 var getButtonCard = function () {
     return document.querySelector("#button-card");
 };
-var getOption = function () { return document.querySelector('#option'); };
+var getOption = function () { return document.querySelector("#option"); };
 /**<============== End Utilities <================*/
 /**==============> Constants ================>*/
+var iconSelection = {
+    Japonica: "https://d3yor8z393217.cloudfront.net/rice.svg",
+    Tomato: "https://d3yor8z393217.cloudfront.net/tomato.svg",
+    Corn: "https://d3yor8z393217.cloudfront.net/corn.svg"
+};
 var cropSelection = {
     Japonica: "쌀",
     Tomato: "토마토",
@@ -120,27 +131,32 @@ var actions = {
     plowing: "경운",
     harvest: "수확"
 };
+var descriptionActions = {
+    sow: "파종을 하면 작물을 심을 수 있습니다.",
+    irrigation: "관개를 하면 작물을 물을 수 있습니다.",
+    topdressing: "시비를 하면 작물에 비료를 줄 수 있습니다.",
+    plowing: "경운을 하면 작물을 흙으로 뒤집을 수 있습니다.",
+    harvest: "수확을 하면 작물을 수확할 수 있습니다."
+};
 var sowMethod = {
-    'direct': '직접',
-    'indirect': '간접'
+    direct: "직접",
+    indirect: "간접"
 };
 var sowGap = {
-    'narrow': '좁게',
-    'wide': '넓게'
+    narrow: "좁게",
+    wide: "넓게"
 };
 var irrigationMethod = {
-    'Flood': 'Flood',
-    'Sprinkler': 'Sprinkler',
-    'Furrow': 'Furrow'
+    Flood: "Flood",
+    Sprinkler: "Sprinkler",
+    Furrow: "Furrow"
 };
 var topDressingMethod = {
     "applied-in-irrigation-water": "관개수식",
-    'band-on-soil': '밴드식',
-    'banded-on-beneath-surface': '묻는 방식'
+    "band-on-soil": "밴드식",
+    "banded-on-beneath-surface": "묻는 방식"
 };
-/**<============== End Constants <================*/
-/**==============> Appenders ================>*/
-var appendButtonCards = function (items, to) {
+var appendButtonCards = function (type, items, to) {
     // Clear cards
     var cards = to.querySelectorAll(".card");
     cards.forEach(function (card) { return card.remove(); });
@@ -153,7 +169,10 @@ var appendButtonCards = function (items, to) {
         button.setAttribute("to", card);
         button.setAttribute("style", "width: ".concat(100 / items.length, "%;"));
         var span = clone.querySelector("span");
-        span.innerText = items[card];
+        span.innerHTML =
+            type === "crop-selection"
+                ? "<div class=\"button-wrap\"><img src=\"".concat(iconSelection[card], "\" /><span>").concat(items[card], "</span></div>")
+                : "<div class=\"button-wrap\"><span>".concat(items[card], "</span><div class=\"popup\">").concat(descriptionActions[card], "</div></div>");
         var cards_1 = to.querySelector(".cards");
         cards_1.appendChild(clone);
     }
@@ -193,16 +212,18 @@ var appendOptions = function (options, to) {
 };
 /**<============== End Appenders <================*/
 /**==============> CropSelection ================>*/
-var requestCurrentTileInfo = function () { return new Promise(function (resolve) {
-    window.addEventListener('message', function (_a) {
-        var data = _a.data;
-        if (data.action === 'response-current-tile-info') {
-            registerDefaultEventListener();
-            resolve(data.payload);
-        }
+var requestCurrentTileInfo = function () {
+    return new Promise(function (resolve) {
+        window.addEventListener("message", function (_a) {
+            var data = _a.data;
+            if (data.action === "response-current-tile-info") {
+                registerDefaultEventListener();
+                resolve(data.payload);
+            }
+        });
+        window.postMessage(actionCreator("request-current-tile-info", null));
     });
-    window.postMessage(actionCreator('request-current-tile-info', null));
-}); };
+};
 var registerCropSelectionUI = function () {
     // Initialize UI
     clear();
@@ -210,9 +231,10 @@ var registerCropSelectionUI = function () {
     hideBackButton();
     // Indicator
     setIndicator("비어있는 농지");
+    setSubIndicator("수확할 농작물을 선택해주세요.");
     // Crop Selection
     var selectCrop = document.querySelector("#select-crop");
-    var buttons = appendButtonCards(cropSelection, selectCrop);
+    var buttons = appendButtonCards("crop-selection", cropSelection, selectCrop);
     buttons.forEach(function (button) {
         button.onclick = function () { return __awaiter(void 0, void 0, void 0, function () {
             var crop, currentTileInfo;
@@ -239,21 +261,21 @@ var registerSelectStatusUI = function (info) {
     hideBackButton();
     // Title Statement
     setIndicator(getStatusStatement(cropSelection[info.crop]));
+    setSubIndicator("<progress max=\"100\" value=\"20\" ></progress>");
     // Progress
     var selectStatus = document.querySelector("#select-status");
     var progress = selectStatus.querySelector("progress");
     progress.value = info.progress * 100;
     // Actions
-    var buttons = appendButtonCards(actions, selectStatus);
+    var buttons = appendButtonCards("actions", actions, selectStatus);
     var sowButton = buttons[0], irrigationButton = buttons[1], topDressingButton = buttons[2], plowingButton = buttons[3], harvestButton = buttons[4];
     sowButton.onclick = function () { return registerSelectSowUI(info); };
     irrigationButton.onclick = function () { return registerSelectIrrigationUI(info); };
     topDressingButton.onclick = function () { return registerSelectTopDressingUI(info); };
-    plowingButton.onclick = function () { return window.postMessage(actionCreator('add-plowing', null)); };
+    plowingButton.onclick = function () { }; // Some Action when plowing
     harvestButton.onclick = function () { }; // Some Action when harvest
 };
 /**<============== End Select Status <================*/
-/**==============> Select Sow ================>*/
 var registerSelectSowUI = function (info) {
     // Initialize UI
     clear();
@@ -261,22 +283,22 @@ var registerSelectSowUI = function (info) {
     showBackButton();
     var selectSow = document.querySelector("#select-sow");
     // Sow methods
-    var sowMethodSelection = selectSow.querySelector('#sow-method');
+    var sowMethodSelection = selectSow.querySelector("#sow-method");
     var sowMethodOptions = appendOptions(sowMethod, sowMethodSelection);
     // Sow Gap
-    var sowGapSelection = selectSow.querySelector('#sow-gap');
+    var sowGapSelection = selectSow.querySelector("#sow-gap");
     appendOptions(sowGap, sowGapSelection);
     var sowGapOptions = sowGapSelection.querySelectorAll("option");
     // Sow Degree
     var sowDegreeIndicator = selectSow.querySelector("#sow-degree span");
-    var sowDegreeConfig = selectSow.querySelector('#sow-degree input');
+    var sowDegreeConfig = selectSow.querySelector("#sow-degree input");
     sowDegreeConfig.oninput = function (event) {
         var degree = event.target.value.toString();
         if (Number(event.target.value) < 10) {
-            degree = '&nbsp;&nbsp;' + degree;
+            degree = "&nbsp;&nbsp;" + degree;
         }
         else if (Number(event.target.value) < 100) {
-            degree = '&nbsp;' + degree;
+            degree = "&nbsp;" + degree;
         }
         else {
             // pass
@@ -313,12 +335,12 @@ var registerSelectIrrigationUI = function (info) {
     showBackButton();
     var selectIrrigation = document.querySelector("#select-irrigation");
     // Irrigation methods
-    var irrigationMethodSelection = selectIrrigation.querySelector('#sow-method');
+    var irrigationMethodSelection = selectIrrigation.querySelector("#sow-method");
     var irrigationMethodOptions = appendOptions(irrigationMethod, irrigationMethodSelection);
     // Add Irrigation
     var addIrrigationButton = selectIrrigation.querySelector("#add-irrigation button");
     addIrrigationButton.onclick = function () {
-        window.postMessage(actionCreator('add-irrigation', null));
+        window.postMessage(actionCreator("add-irrigation", null));
     };
     if (info.irrigation.method) {
         irrigationMethodOptions.forEach(function (option) {
@@ -340,7 +362,7 @@ var registerSelectTopDressingUI = function (info) {
     showBackButton();
     var selectTopDressing = document.querySelector("#select-topdressing");
     // Top Dressing methods
-    var topDressingMethodSelection = selectTopDressing.querySelector('#topdressing-method');
+    var topDressingMethodSelection = selectTopDressing.querySelector("#topdressing-method");
     var topDressingMethodOptions = appendOptions(topDressingMethod, topDressingMethodSelection);
     // Material configuration
     var materialIndicators = selectTopDressing.querySelectorAll("#topdressing-material > div");
@@ -356,7 +378,7 @@ var registerSelectTopDressingUI = function (info) {
     topDressingDepthConfig.oninput = function (event) {
         var depth = event.target.value.toString();
         if (Number(event.target.value) < 10) {
-            depth = '&nbsp;' + depth;
+            depth = "&nbsp;" + depth;
         }
         topDressingDepthIndicator.innerHTML = "\uC2DC\uBE44 \uAE4A\uC774: ".concat(depth);
     };
@@ -393,12 +415,3 @@ var registerDefaultEventListener = function () {
     });
 };
 registerDefaultEventListener();
-var getTimeDom = function () {
-    return document.querySelector(".time-text");
-};
-var setTime = function (timeText) {
-    var dom = getTimeDom();
-    if (dom) {
-        dom.innerHTML = timeText;
-    }
-};

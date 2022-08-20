@@ -13,129 +13,135 @@
     - #select-plowing <- 경작 설정
  -->
 
-<div id="modal">
-  <!-- Indicator -->
-  <div id="indicator" style="justify-content: center;">
-    <h2 class="side back" style="display: none;"><-</h2>
-    <h2 class="title"></h2>
-    <h2 class="side" style="display: none;"></h2>
+<div id="modal-top-container">
+  <div id="modal">
+    <!-- Indicator -->
+    <div id="indicator">
+      <h2 class="side back" style="display: none"><-</h2>
+      <div class="title-wrap">
+        <span class="title"></span>
+        <span class="subtitle"></span>
+      </div>
+      <h2 class="side" style="display: none"></h2>
+    </div>
+
+    <!-- 작물 선택 -->
+    <section id="select-crop" class="empty-crop">
+      <div class="container center">
+        <div class="cards cards-horizontal"></div>
+      </div>
+    </section>
+
+    <!-- 작물 상태 및 액션 선택 -->
+    <section id="select-status" class="has-crop" style="display: none">
+      <!-- Status -->
+      <div id="status">
+        <div>
+          <h4>농작물 생육 정도</h4>
+          <progress max="100" value="0"></progress>
+        </div>
+        <div>
+          <h4>관개량: 0L</h4>
+        </div>
+      </div>
+      <!-- Actions -->
+      <div class="container center">
+        <h4>관리하기</h4>
+        <div class="cards cards-horizontal"></div>
+      </div>
+    </section>
+
+    <!-- 파종 -->
+    <section id="select-sow" class="has-crop" style="display: none">
+      <div class="container center">
+        <h4>파종 설정</h4>
+        <div class="cards cards-vertical">
+          <!-- 파종 방식 -->
+          <select id="sow-method">
+            <option value="" disabled selected>파종 방식을 선택해주세요</option>
+          </select>
+          <!-- 파종 간격 -->
+          <select id="sow-gap">
+            <option value="" disabled selected>파종 간격을 선택해주세요</option>
+          </select>
+          <!-- 파종 각도 -->
+          <div id="sow-degree" class="container row">
+            <span>파종 각도: &nbsp;&nbsp;0</span>
+            <input type="range" min="0" max="360" value="0" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 관개 -->
+    <section id="select-irrigation" class="has-crop" style="display: none">
+      <div class="container center">
+        <h4>관개 설정</h4>
+        <div class="cards cards-vertical">
+          <!-- 관개 방식 -->
+          <select id="irrigation-method">
+            <option value="" disabled selected>관개 방식을 선택해주세요</option>
+          </select>
+          <div id="add-irrigation">
+            <button>물 주기</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 시비 -->
+    <section id="select-topdressing" class="has-crop" style="display: none">
+      <div class="container center">
+        <h4>시비 설정</h4>
+        <div class="cards cards-vertical">
+          <!-- 시비 방식 -->
+          <select id="topdressing-method">
+            <option value="" disabled selected>시비 방식을 선택해주세요</option>
+          </select>
+          <div id="topdressing-material">
+            <span>비료 선택</span>
+            <div id="topdressing-nitro" class="container row">
+              <span>질소</span>
+              <input type="range" min="0" max="100" value="33" />
+            </div>
+            <div id="topdressing-phosphorus" class="container row">
+              <span>인산</span>
+              <input type="range" min="0" max="100" value="33" />
+            </div>
+            <div id="topdressing-cali" class="container row">
+              <span>칼리</span>
+              <input type="range" min="0" max="100" value="33" />
+            </div>
+          </div>
+          <div id="topdressing-depth" class="container row">
+            <span>시비 깊이: 0</span>
+            <input type="range" min="0" max="100" value="0" />
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 
-  <!-- 작물 선택 -->
-  <section id="select-crop" class="empty-crop">
-    <div class="container center">
-      <h4>농작물 선택</h4>
-      <div class="cards cards-horizontal"></div>
-    </div>
-  </section>
+  <!-- Button Card -->
+  <template id="button-card">
+    <button class="card">
+      <img />
+      <span></span>
+    </button>
+  </template>
 
-  <!-- 작물 상태 및 액션 선택 -->
-  <section id="select-status" class="has-crop" style="display: none;">
-    <!-- Status -->
-    <div id="status">
-      <div>
-        <h4>농작물 생육 정도</h4>
-        <progress max="100" value="0"></progress>
-      </div>
-      <div>
-        <h4>관개량: 0L</h4>
-      </div>
-    </div>
-    <!-- Actions -->
-    <div class="container center">
-      <h4>관리하기</h4>
-      <div class="cards cards-horizontal"></div>
-    </div>
-  </section>
+  <!-- Option -->
+  <template id="option">
+    <option>
+      <img />
+      <span></span>
+    </option>
+  </template>
 
-  <!-- 파종 -->
-  <section id="select-sow" class="has-crop" style="display: none;">
-    <div class="container center">
-      <h4>파종 설정</h4>
-      <div class="cards cards-vertical">
-        <!-- 파종 방식 -->
-        <select id="sow-method">
-          <option value="" disabled selected>파종 방식을 선택해주세요</option>
-        </select>
-        <!-- 파종 간격 -->
-        <select id="sow-gap">
-          <option value="" disabled selected>파종 간격을 선택해주세요</option>
-        </select>
-        <!-- 파종 각도 -->
-        <div id="sow-degree" class="container row">
-          <span>파종 각도: &nbsp;&nbsp;0</span>
-          <input type="range" min="0" max="360" value="0" />
-        </div>
-      </div>
-    </div>
-  </section>
+  <!-- Slider -->
 
-  <!-- 관개 -->
-  <section id="select-irrigation" class="has-crop" style="display: none;">
-    <div class="container center">
-      <h4>관개 설정</h4>
-      <div class="cards cards-vertical">
-        <!-- 관개 방식 -->
-        <select id="irrigation-method">
-          <option value="" disabled selected>관개 방식을 선택해주세요</option>
-        </select>
-        <div id="add-irrigation">
-          <button>물 주기</button>
-        </div>
-      </div>
-    </div>
-  </section>
-  
-  <!-- 시비 -->
-  <section id="select-topdressing" class="has-crop" style="display: none;">
-    <div class="container center">
-      <h4>시비 설정</h4>
-      <div class="cards cards-vertical">
-        <!-- 시비 방식 -->
-        <select id="topdressing-method">
-          <option value="" disabled selected>시비 방식을 선택해주세요</option>
-        </select>
-        <div id="topdressing-material">
-          <span>비료 선택</span>
-          <div id="topdressing-nitro" class="container row">
-            <span>질소</span>
-            <input type="range" min="0" max="100" value="33" />
-          </div>
-          <div id="topdressing-phosphorus" class="container row">
-            <span>인산</span>
-            <input type="range" min="0" max="100" value="33" />
-          </div>
-          <div id="topdressing-cali" class="container row">
-            <span>칼리</span>
-            <input type="range" min="0" max="100" value="33" />
-          </div>
-        </div>
-        <div id="topdressing-depth" class="container row">
-          <span>시비 깊이: 0</span>
-          <input type="range" min="0" max="100" value="0" />
-        </div>
-      </div>
-    </div>
-  </section>
+  <script>
+    var exports = {};
+  </script>
+  <script src="bottom-modal.js" defer></script>
 </div>
-
-<!-- Button Card -->
-<template id="button-card">
-  <button class="card">
-    <img />
-    <span></span>
-  </button>
-</template>
-
-<!-- Option -->
-<template id="option">
-  <option>
-    <img />
-    <span></span>
-  </option>
-</template>
-
-<!-- Slider -->
-
-<!-- This is for test -->
-<script src="bottom-modal.js" defer></script>

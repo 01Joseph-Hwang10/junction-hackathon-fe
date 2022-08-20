@@ -1,13 +1,31 @@
 import { ScriptWidget } from "zep-script";
 
-export type ActionType =
+export type ManageType =
   | "sow"
   | "irrigation"
   | "topdressing"
   | "plowing"
   | "harvest";
 
+export type ActionType = 
+  | 'show-empty-crop-ui'
+  | "update-current-tile-info" 
+  | "update-current-time"
+  | 'add-irrigation'
+  | 'add-plowing'
+  | 'request-current-tile-info'
+  | 'response-current-tile-info'
+  | 'harvest'
+
+export interface Action<T = any> {
+  action: ActionType;
+  payload: T;
+}
+
 export type CropType = "Japonica" | "Tomato" | "Corn";
+
+export type IrrigationMethod = "Furrow" | "Flood" | 'Sprinkler';
+export type FertilizationMethod = | 'applied-in-irrigation-water' | 'band-on-soil' | 'banded-on-beneath-surface'
 
 export type SowMethod = "direct" | "indirect";
 export type SowGap =
@@ -36,17 +54,27 @@ export interface LandTileInfo {
   /**
    * 0 ~ 1 (강수량)
    */
-  irrigation?: number;
-  /**
-   * 0 ~ 1 for each attribute (시비량)
-   * 3 attribute should sum up as 1
-   */
-  topdressing?: {
-    nitro: number;
-    phosphorus: number;
-    cali: number;
+  irrigation: {
+    method?: IrrigationMethod;
+    amount: number;
+  }
+  topdressing: {
+    /**
+     * 0 ~ 1 for each attribute (시비량)
+     * 3 attribute should sum up as 0 or 1
+     */
+    material: {
+      nitro: number;
+      phosphorus: number;
+      cali: number;
+    }
+    method?: FertilizationMethod;
+    depth: number;
   };
   plowing?: number;
+  inventory: {
+    [key in CropType]: number;
+  }
 }
 
 export interface UserStorage {

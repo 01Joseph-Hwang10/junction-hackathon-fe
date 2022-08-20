@@ -10,9 +10,16 @@
     - #select-harvest
 */
 
-import { ActionType, CropType, LandTileInfo, SowGap, SowMethod } from "./types";
+import { ManageType, CropType, LandTileInfo, SowGap, SowMethod, ActionType, Action, IrrigationMethod, FertilizationMethod } from "./types";
 
 /**==============> Utilities ================>*/
+
+const actionCreator = <T = any>(action: ActionType, payload: T) => {
+  return {
+    action,
+    payload,
+  };
+};
 
 const clear = () => {
   document.querySelectorAll("section").forEach((section) => {
@@ -62,7 +69,7 @@ const cropSelection: Record<CropType, string> = {
   Corn: "옥수수",
 };
 
-const actions: Record<ActionType, string> = {
+const actions: Record<ManageType, string> = {
   sow: "파종",
   irrigation: "관개",
   topdressing: "시비",
@@ -78,6 +85,18 @@ const sowMethod: Record<SowMethod, string> = {
 const sowGap: Record<SowGap, string> = {
   'narrow': '좁게',
   'wide': '넓게',
+}
+
+const irrigationMethod: Record<IrrigationMethod, string> = {
+  'Flood': 'Flood',
+  'Sprinkler': 'Sprinkler',
+  'Furrow': 'Furrow',
+}
+
+const topDressingMethod: Record<FertilizationMethod, string> = {
+  "applied-in-irrigation-water": "관개수식",
+  'band-on-soil': '밴드식',
+  'banded-on-beneath-surface': '묻는 방식',
 }
 
 /**<============== End Constants <================*/
@@ -144,7 +163,17 @@ const appendOptions = <T extends Record<any, any>>(options: T, to: Element): HTM
 
 /**==============> CropSelection ================>*/
 
-const registerCropSelectionUI = (range: LandTileInfo['range']) => {
+const requestCurrentTileInfo = (): Promise<LandTileInfo> => new Promise((resolve) => {
+  window.addEventListener('message', ({data}: {data: Action}) => {
+    if (data.action === 'response-current-tile-info') {
+      registerDefaultEventListener()
+      resolve(data.payload)
+    }
+  })
+  window.postMessage(actionCreator('request-current-tile-info', null))
+})
+
+const registerCropSelectionUI = () => {
   // Initialize UI
   clear();
   show("#select-crop");
@@ -157,13 +186,12 @@ const registerCropSelectionUI = (range: LandTileInfo['range']) => {
   const selectCrop = document.querySelector("#select-crop");
   const buttons = appendButtonCards(cropSelection, selectCrop);
   buttons.forEach((button) => {
-    button.onclick = () => {
+    button.onclick = async () => {
       const crop: CropType = button.getAttribute("to") as CropType;
+      const currentTileInfo: LandTileInfo = await requestCurrentTileInfo()
       registerSelectStatusUI({
+        ...currentTileInfo,
         crop,
-        range,
-        progress: 0,
-        id: Math.random().toString(),
       });
     };
   });
@@ -191,9 +219,9 @@ const registerSelectStatusUI = (info: LandTileInfo) => {
   const buttons = appendButtonCards(actions, selectStatus)
   const [sowButton, irrigationButton, topDressingButton, plowingButton, harvestButton] = buttons
   sowButton.onclick = () => registerSelectSowUI(info)
-  irrigationButton.onclick = () => {}
+  irrigationButton.onclick = () => registerSelectIrrigationUI(info)
   topDressingButton.onclick = () => registerSelectTopDressingUI(info)
-  plowingButton.onclick = () => {} // Some Action when plowing
+  plowingButton.onclick = () => window.postMessage(actionCreator('add-plowing', null))
   harvestButton.onclick = () => {} // Some Action when harvest
 }
 
@@ -254,24 +282,90 @@ const registerSelectSowUI = (info: LandTileInfo) => {
 
 /**<============== End Select Sow <================*/
 
+/**==============> Irrigation ================>*/
+
+const registerSelectIrrigationUI = (info: LandTileInfo) => {
+  // Initialize UI
+  clear();
+  show("#select-irrigation");
+  showBackButton(info)
+
+  const selectIrrigation = document.querySelector("#select-irrigation");
+  // Irrigation methods
+  const irrigationMethodSelection = selectIrrigation.querySelector('#sow-method');
+  const irrigationMethodOptions = appendOptions(irrigationMethod, irrigationMethodSelection);
+
+  // Add Irrigation
+  const addIrrigationButton: HTMLButtonElement = selectIrrigation.querySelector("#add-irrigation button");
+  addIrrigationButton.onclick = () => {
+    window.postMessage(actionCreator('add-irrigation', null))
+  }
+
+  if (info.irrigation.method) {
+    irrigationMethodOptions.forEach((option: HTMLOptionElement) => {
+      if (option.value === info.irrigation.method) {
+        option.setAttribute("selected", "true");
+      } else {
+        option.removeAttribute("selected");
+      }
+    })
+  }
+}
+
+/**<============== End Irrigation <================*/
+
 /**==============> Top Dressing ================>*/
 
-const registerSelectTopDressingUI = (info: LandTileInfo) => {}
+const registerSelectTopDressingUI = (info: LandTileInfo) => {
+  // Initialize UI
+  clear();
+  show("#select-topdressing");
+  showBackButton(info)
+
+  const selectTopDressing = document.querySelector("#select-topdressing");
+  // Top Dressing methods
+  const topDressingMethodSelection = selectTopDressing.querySelector('#topdressing-method');
+  const topDressingMethodOptions = appendOptions(topDressingMethod, topDressingMethodSelection);
+
+  // Material configuration
+
+  // Sow Degree
+  const topDressingDepthIndicator: HTMLSpanElement = selectTopDressing.querySelector("#topDressing-depth span");
+  const topDressingDepthConfig: HTMLInputElement = selectTopDressing.querySelector('#topDressing-depth input')
+  topDressingDepthConfig.oninput = (event: any) => {
+    let depth = event.target.value.toString();
+    if (Number(event.target.value) < 10) {
+      depth = '&nbsp;' + depth
+    }
+    topDressingDepthIndicator.innerHTML = `파종 각도: ${depth}`;
+  }
+
+  if (info.topdressing.method) {
+    topDressingMethodOptions.forEach((option: HTMLOptionElement) => {
+      if (option.value === info.topdressing.method) {
+        option.setAttribute("selected", "true");
+      } else {
+        option.removeAttribute("selected");
+      }
+    })
+  }
+  topDressingDepthConfig.value = info.topdressing.depth.toString();
+  topDressingDepthIndicator.innerText = `파종 각도: ${info.topdressing.depth}`;
+}
 
 /**<============== End Top Dressing <================*/
 
-/**==============> Plowing ================>*/
-
-const registerSelectPlowingButtonUI = (info: LandTileInfo) => {}
-
-/**<============== End Plowing <================*/
-
 // Main
 
-registerCropSelectionUI({
-  x: [0, 10],
-  y: [0, 10],
-});
+const registerDefaultEventListener = () => {
+  window.addEventListener('message', ({data}: {data: Action}) => {
+    if (data.action === 'show-empty-crop-ui') {
+      registerCropSelectionUI()
+    }
+  })
+}
+
+registerDefaultEventListener()
 
 const getTimeDom = () => {
   return document.querySelector(".time-text");

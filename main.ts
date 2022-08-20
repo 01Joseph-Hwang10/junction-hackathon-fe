@@ -3,30 +3,73 @@
  */
 
 import "zep-script";
-import type { LandTileInfo, UserStorage, UserTag } from "./src/types";
+import { ScriptPlayer, ScriptWidget } from "zep-script";
+import type { Action, ActionType, LandTileInfo, UserStorage, UserTag } from "./src/types";
 
-type Action = "update-current-tile-info" | "update-current-time";
-
-const actionCreator = <T = any>(action: Action, payload: T) => {
+const actionCreator = <T = any>(action: ActionType, payload: T) => {
   return {
     action,
     payload,
   };
 };
 
+const addListenerTo = (widget: ScriptWidget, callback: (widget: ScriptWidget, sender: ScriptPlayer, data: Action) => void) => {
+  // @ts-ignore
+  widget.onMessage.Add((sender, data) => callback(widget, sender, data));
+}
+
 /**==============> Initializing ================>*/
+
+const reducer = (widget: ScriptWidget,player: ScriptPlayer, action: Action) => {
+  switch (action.action) {
+    case 'add-irrigation':
+      const storage: UserStorage = JSON.parse(player.storage);
+      const tileInfo = getCurrentTile(storage);
+      tileInfo.irrigation.amount++
+      storage.tileInfos[storage.currentTileId] = tileInfo;
+      player.storage = JSON.stringify(storage);
+      break;
+    case 'add-plowing':
+      tileInfo.plowing++;
+      storage.tileInfos[storage.currentTileId] = tileInfo;
+      player.storage = JSON.stringify(storage);
+      break;
+    case 'request-current-tile-info':
+      const currentTile = getCurrentTile(JSON.parse(player.storage));
+      widget.sendMessage(currentTile)
+      break;
+    default:
+      break;
+  }
+}
 
 // Add control panels and indicators
 ScriptApp.onJoinPlayer.Add((player) => {
+  // Declare widgets
+  const topIndicator = player.showWidget("bottom-modal.html", "bottom", 500, 250)
+  const bottomModal = player.showWidget("top-indicator.html", "top", 300, 50)
+  const timeModal = player.showWidget("time-modal.html", "top", 350, 80)
+
+  // Add listeners
+  addListenerTo(bottomModal, reducer)
+  addListenerTo(topIndicator, reducer)
+  addListenerTo(timeModal, reducer)
+
+  // Add widgets as tags
   player.tag = {
-    topIndicator: player.showWidget("bottom-modal.html", "bottom", 500, 250),
-    bottomModal: player.showWidget("top-indicator.html", "top", 300, 50),
-    timeModal: player.showWidget("time-modal.html", "top", 350, 80),
+    topIndicator,
+    bottomModal,
+    timeModal,
   } as UserTag;
+
+  // Initialize storage
   player.storage = JSON.stringify({
+    /**@todo Initialize tile infos */
     tileInfos: {},
     currentTileInfo: null,
   } as UserStorage);
+
+  // Save
   player.save();
 });
 
@@ -68,10 +111,10 @@ const registerLandTileListener = ({
       sender.save();
       const tag: UserTag = sender.tag;
       tag.bottomModal.sendMessage(
-        actionCreator("update-current-tile-info", getCurrentTile(storage))
+        actionCreator("show-empty-crop-ui", null)
       );
       tag.topIndicator.sendMessage(
-        actionCreator("update-current-tile-info", getCurrentTile(storage))
+        actionCreator("show-empty-crop-ui", null)
       );
     }
   });

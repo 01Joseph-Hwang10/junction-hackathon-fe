@@ -124,11 +124,12 @@ ScriptApp.onJoinPlayer.Add((player) => {
   player.sendUpdated();
 });
 
+let notOnLand = true;
+
 ScriptApp.onUpdate.Add(() => {
   ScriptApp.players.map((player) => {
     const storage: UserStorage = JSON.parse(player.storage)
     player.showCenterLabel(player.storage)
-    let notOnLand = true;
     Object.values(storage.tileInfos).forEach((tileInfo) => {
       notOnLand = notOnLand && registerLandTileListener(player, tileInfo)
     })
@@ -161,7 +162,6 @@ const registerLandTileListener = (player: ScriptPlayer, {
     player.save();
     const currentTile = storage.tileInfos[id]
     const tag: UserTag = player.tag;
-    ScriptApp.showCenterLabel(currentTile.id)
     tag.bottomModal.sendMessage(
       actionCreatorGame("show-crop-ui", currentTile)
     );

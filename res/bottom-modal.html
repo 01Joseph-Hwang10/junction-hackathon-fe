@@ -348,7 +348,7 @@ option {
     - #select-sow
     - #select-irrigation
     - #select-topdressing
-    - #select-cultivation
+    - #select-plowing
     - #select-harvest
 */
 var __assign = (this && this.__assign) || function () {
@@ -398,6 +398,24 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+/**==============> States ================>*/
+var selectCropOpened = false;
+var selectStatusOpened = false;
+var selectSowOpened = false;
+var selectIrrigationOpened = false;
+var selectTopdressingOpened = false;
+var selectPlowingOpened = false;
+var selectHarvestOpened = false;
+var clearState = function () {
+    selectCropOpened = false;
+    selectStatusOpened = false;
+    selectSowOpened = false;
+    selectIrrigationOpened = false;
+    selectTopdressingOpened = false;
+    selectPlowingOpened = false;
+    selectHarvestOpened = false;
+};
+/**<============== End States <================*/
 /**==============> Utilities ================>*/
 var actionCreatorBottomModal = function (action, payload) {
     return {
@@ -408,16 +426,10 @@ var actionCreatorBottomModal = function (action, payload) {
 var show = function (selector) {
     document.querySelector(selector).setAttribute("style", "display: flex;");
 };
-var clear = function (id) {
-    var shouldRender = true;
+var clear = function () {
     document.querySelectorAll("section").forEach(function (section) {
-        if (section.id === id && section.getAttribute('style') === 'display: flex;') {
-            shouldRender = false;
-            return;
-        }
         section.setAttribute("style", "display: none;");
     });
-    return shouldRender;
 };
 var showBackButton = function () {
     document.querySelectorAll('#indicator .side').forEach(function (side) {
@@ -571,10 +583,12 @@ var requestCurrentTileInfo = function () {
     });
 };
 var registerCropSelectionUI = function () {
-    // Initialize UI
-    var shouldRender = clear('select-crop');
-    if (!shouldRender)
+    if (selectCropOpened)
         return;
+    clearState();
+    selectCropOpened = true;
+    // Initialize UI
+    clear();
     show("#select-crop");
     hideBackButton();
     // Indicator
@@ -603,10 +617,12 @@ var registerCropSelectionUI = function () {
 /**<============== End CropSelection <================*/
 /**==============> Select Status ================>*/
 var registerSelectStatusUI = function (info) {
-    // Initialize UI
-    var shouldRender = clear('select-status');
-    if (!shouldRender)
+    if (selectStatusOpened)
         return;
+    clearState();
+    selectStatusOpened = true;
+    // Initialize UI
+    clear();
     show("#select-status");
     hideBackButton();
     // Title Statement
@@ -627,10 +643,12 @@ var registerSelectStatusUI = function (info) {
 };
 /**<============== End Select Status <================*/
 var registerSelectSowUI = function (info) {
-    // Initialize UI
-    var shouldRender = clear('select-sow');
-    if (!shouldRender)
+    if (selectSowOpened)
         return;
+    clearState();
+    selectSowOpened = true;
+    // Initialize UI
+    clear();
     show("#select-sow");
     showBackButton();
     var selectSow = document.querySelector("#select-sow");
@@ -681,10 +699,12 @@ var registerSelectSowUI = function (info) {
 /**<============== End Select Sow <================*/
 /**==============> Irrigation ================>*/
 var registerSelectIrrigationUI = function (info) {
-    // Initialize UI
-    var shouldRender = clear('select-irrigation');
-    if (!shouldRender)
+    if (selectIrrigationOpened)
         return;
+    clearState();
+    selectIrrigationOpened = true;
+    // Initialize UI
+    clear();
     show("#select-irrigation");
     showBackButton();
     var selectIrrigation = document.querySelector("#select-irrigation");
@@ -710,10 +730,12 @@ var registerSelectIrrigationUI = function (info) {
 /**<============== End Irrigation <================*/
 /**==============> Top Dressing ================>*/
 var registerSelectTopDressingUI = function (info) {
-    // Initialize UI
-    var shouldRender = clear('select-topdressing');
-    if (!shouldRender)
+    if (selectTopdressingOpened)
         return;
+    clearState();
+    selectTopdressingOpened = true;
+    // Initialize UI
+    clear();
     show("#select-topdressing");
     showBackButton();
     var selectTopDressing = document.querySelector("#select-topdressing");

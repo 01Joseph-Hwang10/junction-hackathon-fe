@@ -6,7 +6,7 @@
     - #select-sow
     - #select-irrigation
     - #select-topdressing
-    - #select-cultivation
+    - #select-plowing
     - #select-harvest
 */
 
@@ -22,6 +22,28 @@ import {
   FertilizationMethod,
 } from "./types";
 
+/**==============> States ================>*/
+
+let selectCropOpened = false;
+let selectStatusOpened = false;
+let selectSowOpened = false;
+let selectIrrigationOpened = false;
+let selectTopdressingOpened = false;
+let selectPlowingOpened = false;
+let selectHarvestOpened = false;
+
+const clearState = () => {
+  selectCropOpened = false;
+  selectStatusOpened = false;
+  selectSowOpened = false;
+  selectIrrigationOpened = false;
+  selectTopdressingOpened = false;
+  selectPlowingOpened = false;
+  selectHarvestOpened = false;
+}
+
+/**<============== End States <================*/
+
 /**==============> Utilities ================>*/
 
 const actionCreatorBottomModal = <T = any>(action: ActionType, payload: T) => {
@@ -35,16 +57,10 @@ const show = (selector: string) => {
   document.querySelector(selector).setAttribute("style", "display: flex;");
 };
 
-const clear = (id: string): boolean => {
-  let shouldRender = true;
+const clear = () => {
   document.querySelectorAll("section").forEach((section) => {
-    if (section.id === id && section.getAttribute('style') === 'display: flex;') {
-      shouldRender = false
-      return;
-    }
     section.setAttribute("style", "display: none;");
   });
-  return shouldRender
 };
 
 const showBackButton = () => {
@@ -225,9 +241,11 @@ const requestCurrentTileInfo = (): Promise<LandTileInfo> => {
 }
 
 const registerCropSelectionUI = () => {
+  if (selectCropOpened) return;
+  clearState()
+  selectCropOpened = true;
   // Initialize UI
-  const shouldRender = clear('select-crop');
-  if (!shouldRender) return;
+  clear();
   show("#select-crop");
   hideBackButton();
 
@@ -259,9 +277,11 @@ const registerCropSelectionUI = () => {
 /**==============> Select Status ================>*/
 
 const registerSelectStatusUI = (info: LandTileInfo) => {
+  if (selectStatusOpened) return;
+  clearState()
+  selectStatusOpened = true;
   // Initialize UI
-  const shouldRender = clear('select-status');
-  if (!shouldRender) return;
+  clear();
   show("#select-status");
   hideBackButton();
 
@@ -293,9 +313,11 @@ const registerSelectStatusUI = (info: LandTileInfo) => {
 /**<============== End Select Status <================*/
 
 const registerSelectSowUI = (info: LandTileInfo) => {
+  if (selectSowOpened) return;
+  clearState()
+  selectSowOpened = true;
   // Initialize UI
-  const shouldRender = clear('select-sow');
-  if (!shouldRender) return;
+  clear();
   show("#select-sow");
   showBackButton()
 
@@ -351,9 +373,11 @@ const registerSelectSowUI = (info: LandTileInfo) => {
 /**==============> Irrigation ================>*/
 
 const registerSelectIrrigationUI = (info: LandTileInfo) => {
+  if (selectIrrigationOpened) return;
+  clearState()
+  selectIrrigationOpened = true;
   // Initialize UI
-  const shouldRender = clear('select-irrigation');
-  if (!shouldRender) return;
+  clear();
   show("#select-irrigation");
   showBackButton()
 
@@ -390,9 +414,11 @@ const registerSelectIrrigationUI = (info: LandTileInfo) => {
 /**==============> Top Dressing ================>*/
 
 const registerSelectTopDressingUI = (info: LandTileInfo) => {
+  if (selectTopdressingOpened) return;
+  clearState()
+  selectTopdressingOpened = true;
   // Initialize UI
-  const shouldRender = clear('select-topdressing');
-  if (!shouldRender) return;
+  clear();
   show("#select-topdressing");
   showBackButton()
 

@@ -8,7 +8,7 @@ export type ManageType =
   | "harvest";
 
 export type ActionType = 
-  | 'show-empty-crop-ui'
+  | 'show-crop-ui'
   | "update-current-tile-info" 
   | "update-current-time"
   | 'add-irrigation'

@@ -72,13 +72,24 @@ var clear = function () {
 var show = function (selector) {
     document.querySelector(selector).setAttribute("style", "display: flex;");
 };
-var showBackButton = function (info) {
+var showBackButton = function () {
     document.querySelectorAll('#indicator .side').forEach(function (side) {
         side.setAttribute('style', 'display: block;');
     });
     document.querySelector('#indicator').removeAttribute('style');
     var backButton = document.querySelector('#indicator .back');
-    backButton.onclick = function () { return registerSelectStatusUI(info); };
+    backButton.onclick = function () { return __awaiter(void 0, void 0, void 0, function () {
+        var currentTileInfo;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, requestCurrentTileInfo()];
+                case 1:
+                    currentTileInfo = _a.sent();
+                    registerSelectStatusUI(currentTileInfo);
+                    return [2 /*return*/];
+            }
+        });
+    }); };
 };
 var hideBackButton = function () {
     document.querySelectorAll('#indicator .side').forEach(function (side) {
@@ -247,7 +258,7 @@ var registerSelectSowUI = function (info) {
     // Initialize UI
     clear();
     show("#select-sow");
-    showBackButton(info);
+    showBackButton();
     var selectSow = document.querySelector("#select-sow");
     // Sow methods
     var sowMethodSelection = selectSow.querySelector('#sow-method');
@@ -299,7 +310,7 @@ var registerSelectIrrigationUI = function (info) {
     // Initialize UI
     clear();
     show("#select-irrigation");
-    showBackButton(info);
+    showBackButton();
     var selectIrrigation = document.querySelector("#select-irrigation");
     // Irrigation methods
     var irrigationMethodSelection = selectIrrigation.querySelector('#sow-method');
@@ -326,13 +337,20 @@ var registerSelectTopDressingUI = function (info) {
     // Initialize UI
     clear();
     show("#select-topdressing");
-    showBackButton(info);
+    showBackButton();
     var selectTopDressing = document.querySelector("#select-topdressing");
     // Top Dressing methods
     var topDressingMethodSelection = selectTopDressing.querySelector('#topdressing-method');
     var topDressingMethodOptions = appendOptions(topDressingMethod, topDressingMethodSelection);
     // Material configuration
-    // Sow Degree
+    var materialIndicators = selectTopDressing.querySelectorAll("#topdressing-material > div");
+    materialIndicators.forEach(function (indicator) {
+        var amountConfig = indicator.querySelector('input');
+        amountConfig.oninput = function (event) {
+            // Do some data stuff
+        };
+    });
+    // Top Dressing Depth
     var topDressingDepthIndicator = selectTopDressing.querySelector("#topDressing-depth span");
     var topDressingDepthConfig = selectTopDressing.querySelector('#topDressing-depth input');
     topDressingDepthConfig.oninput = function (event) {
@@ -340,7 +358,7 @@ var registerSelectTopDressingUI = function (info) {
         if (Number(event.target.value) < 10) {
             depth = '&nbsp;' + depth;
         }
-        topDressingDepthIndicator.innerHTML = "\uD30C\uC885 \uAC01\uB3C4: ".concat(depth);
+        topDressingDepthIndicator.innerHTML = "\uC2DC\uBE44 \uAE4A\uC774: ".concat(depth);
     };
     if (info.topdressing.method) {
         topDressingMethodOptions.forEach(function (option) {
@@ -353,15 +371,24 @@ var registerSelectTopDressingUI = function (info) {
         });
     }
     topDressingDepthConfig.value = info.topdressing.depth.toString();
-    topDressingDepthIndicator.innerText = "\uD30C\uC885 \uAC01\uB3C4: ".concat(info.topdressing.depth);
+    topDressingDepthIndicator.innerText = "\uC2DC\uBE44 \uAE4A\uC774: ".concat(info.topdressing.depth);
+    materialIndicators.forEach(function (indicator) {
+        var amountConfig = indicator.querySelector('input');
+        amountConfig.value = info.topdressing.material[indicator.id.replace('topdressing-', '')].toString();
+    });
 };
 /**<============== End Top Dressing <================*/
 // Main
 var registerDefaultEventListener = function () {
     window.addEventListener('message', function (_a) {
         var data = _a.data;
-        if (data.action === 'show-empty-crop-ui') {
-            registerCropSelectionUI();
+        if (data.action === 'show-crop-ui') {
+            if (data.payload.crop) {
+                registerSelectStatusUI(data.payload);
+            }
+            else {
+                registerCropSelectionUI();
+            }
         }
     });
 };

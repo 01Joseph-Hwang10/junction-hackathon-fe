@@ -31,13 +31,16 @@ const show = (selector: string) => {
   document.querySelector(selector).setAttribute("style", "display: flex;");
 };
 
-const showBackButton = (info: LandTileInfo) => {
+const showBackButton = () => {
   document.querySelectorAll('#indicator .side').forEach((side) => {
     side.setAttribute('style', 'display: block;')
   })
   document.querySelector('#indicator').removeAttribute('style')
   const backButton: HTMLHeadingElement = document.querySelector('#indicator .back')
-  backButton.onclick = () => registerSelectStatusUI(info)
+  backButton.onclick = async () => {
+    const currentTileInfo = await requestCurrentTileInfo();
+    registerSelectStatusUI(currentTileInfo)
+  }
 }
 
 const hideBackButton = () => {
@@ -233,7 +236,7 @@ const registerSelectSowUI = (info: LandTileInfo) => {
   // Initialize UI
   clear();
   show("#select-sow");
-  showBackButton(info)
+  showBackButton()
 
   const selectSow = document.querySelector("#select-sow");
   // Sow methods
@@ -288,7 +291,7 @@ const registerSelectIrrigationUI = (info: LandTileInfo) => {
   // Initialize UI
   clear();
   show("#select-irrigation");
-  showBackButton(info)
+  showBackButton()
 
   const selectIrrigation = document.querySelector("#select-irrigation");
   // Irrigation methods
@@ -320,7 +323,7 @@ const registerSelectTopDressingUI = (info: LandTileInfo) => {
   // Initialize UI
   clear();
   show("#select-topdressing");
-  showBackButton(info)
+  showBackButton()
 
   const selectTopDressing = document.querySelector("#select-topdressing");
   // Top Dressing methods
@@ -328,8 +331,15 @@ const registerSelectTopDressingUI = (info: LandTileInfo) => {
   const topDressingMethodOptions = appendOptions(topDressingMethod, topDressingMethodSelection);
 
   // Material configuration
+  const materialIndicators: NodeListOf<HTMLDivElement> = selectTopDressing.querySelectorAll("#topdressing-material > div");
+  materialIndicators.forEach((indicator: HTMLDivElement) => {
+    const amountConfig: HTMLInputElement = indicator.querySelector('input')
+    amountConfig.oninput = (event: any) => {
+      // Do some data stuff
+    }
+  })
 
-  // Sow Degree
+  // Top Dressing Depth
   const topDressingDepthIndicator: HTMLSpanElement = selectTopDressing.querySelector("#topDressing-depth span");
   const topDressingDepthConfig: HTMLInputElement = selectTopDressing.querySelector('#topDressing-depth input')
   topDressingDepthConfig.oninput = (event: any) => {
@@ -337,7 +347,7 @@ const registerSelectTopDressingUI = (info: LandTileInfo) => {
     if (Number(event.target.value) < 10) {
       depth = '&nbsp;' + depth
     }
-    topDressingDepthIndicator.innerHTML = `파종 각도: ${depth}`;
+    topDressingDepthIndicator.innerHTML = `시비 깊이: ${depth}`;
   }
 
   if (info.topdressing.method) {
@@ -350,7 +360,11 @@ const registerSelectTopDressingUI = (info: LandTileInfo) => {
     })
   }
   topDressingDepthConfig.value = info.topdressing.depth.toString();
-  topDressingDepthIndicator.innerText = `파종 각도: ${info.topdressing.depth}`;
+  topDressingDepthIndicator.innerText = `시비 깊이: ${info.topdressing.depth}`;
+  materialIndicators.forEach((indicator: HTMLDivElement) => {
+    const amountConfig: HTMLInputElement = indicator.querySelector('input')
+    amountConfig.value = info.topdressing.material[indicator.id.replace('topdressing-', '')].toString();
+  })
 }
 
 /**<============== End Top Dressing <================*/
@@ -358,9 +372,13 @@ const registerSelectTopDressingUI = (info: LandTileInfo) => {
 // Main
 
 const registerDefaultEventListener = () => {
-  window.addEventListener('message', ({data}: {data: Action}) => {
-    if (data.action === 'show-empty-crop-ui') {
-      registerCropSelectionUI()
+  window.addEventListener('message', ({data}: {data: Action<LandTileInfo>}) => {
+    if (data.action === 'show-crop-ui') {
+      if (data.payload.crop) {
+        registerSelectStatusUI(data.payload);
+      } else {
+        registerCropSelectionUI();
+      }
     }
   })
 }

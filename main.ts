@@ -6,6 +6,38 @@ import "zep-script";
 import { ScriptPlayer, ScriptWidget } from "zep-script";
 import type { Action, ActionType, LandTileInfo, UserStorage, UserTag } from "./src/types";
 
+const landTileInfos: Record<string, LandTileInfo> = {};
+
+const createLandTileInfo = (range: LandTileInfo['range']): void => {
+  const id = Date.now().toString()
+  landTileInfos[id] = {
+    id,
+    range,
+    progress: 0,
+    irrigation: {
+      amount: 0
+    },
+    topdressing: {
+      material: {
+        nitro: 0,
+        phosphorus: 0,
+        cali: 0,
+      },
+      depth: 0,
+    },
+    inventory: {
+      Japonica: 0,
+      Tomato: 0,
+      Corn: 0,
+    }
+  }
+}
+
+new Array(3).fill(0).map((_, i) => createLandTileInfo({
+  x: [i * 10, (i + 1) * 10],
+  y: [i * 10, (i + 1) * 10],
+}))
+
 const actionCreator = <T = any>(action: ActionType, payload: T) => {
   return {
     action,
@@ -65,7 +97,7 @@ ScriptApp.onJoinPlayer.Add((player) => {
   // Initialize storage
   player.storage = JSON.stringify({
     /**@todo Initialize tile infos */
-    tileInfos: {},
+    tileInfos: landTileInfos,
     currentTileInfo: null,
   } as UserStorage);
 
@@ -84,22 +116,7 @@ const getCurrentTile = (storage: UserStorage) =>
 const registerLandTileListener = ({
   id,
   range,
-  crop,
-  progress,
 }: LandTileInfo) => {
-  // Add initial tile info to player storage
-  ScriptApp.onJoinPlayer.Add((player) => {
-    const storage: UserStorage = JSON.parse(player.storage);
-    storage.tileInfos[id] = {
-      id,
-      range,
-      crop,
-      progress,
-    } as LandTileInfo;
-    player.storage = JSON.stringify(storage);
-    player.save();
-  });
-
   // Update current tile info when player touches the tile
   ScriptApp.onObjectTouched.Add((sender, x, y) => {
     const [xmin, xmax] = range.x;
@@ -109,16 +126,19 @@ const registerLandTileListener = ({
       storage.currentTileId = id;
       sender.storage = JSON.stringify(storage);
       sender.save();
+      const currentTile = storage.tileInfos[id]
       const tag: UserTag = sender.tag;
       tag.bottomModal.sendMessage(
-        actionCreator("show-empty-crop-ui", null)
+        actionCreator("show-crop-ui", currentTile)
       );
       tag.topIndicator.sendMessage(
-        actionCreator("show-empty-crop-ui", null)
+        actionCreator("show-crop-ui", currentTile)
       );
     }
   });
 };
+
+Object.values(landTileInfos).map((tileInfo) => registerLandTileListener(tileInfo));
 
 // 앱 시작시간
 const app_start_date = new Date();

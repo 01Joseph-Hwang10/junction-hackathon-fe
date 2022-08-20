@@ -1,10 +1,7 @@
 <head>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap"
-    rel="stylesheet"
-  />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet" />
 </head>
 
 <div id="time-modal-container">
@@ -18,12 +15,12 @@
 </div>
 
 <script>
-  window.addEventListener("message", (e) => {
+  window.addEventListener('message', (e) => {
     // state라는 태그 밸류를 보냈으니 아래 형태로 받는다
     const { action, payload } = e.data;
     // 위의 id test 라는 곳의 텍스트로 적용한다
-    if (action === "update-current-time") {
-      document.getElementById("time-text").innerHTML = payload;
+    if (action === 'update-current-time') {
+      document.getElementById('time-text').innerHTML = payload;
     }
   });
 </script>
@@ -71,6 +68,6 @@
   }
 
   #time-modal #time-text #real-time {
-    font-family: "Montserrat", sans-serif;
+    font-family: 'Montserrat', sans-serif;
   }
 </style>

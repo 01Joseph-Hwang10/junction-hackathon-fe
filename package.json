@@ -7,7 +7,8 @@
     "css:watch": "sass res/ -w",
     "css": "sass res/",
     "lint": "eslint",
-    "compile": "tsc"
+    "compile": "tsc",
+    "compile:watch": "tsc-watch --onSuccess \"python scripts/remove-undefined.py\""
   },
   "devDependencies": {
     "@babel/cli": "^7.18.6",
@@ -23,6 +24,7 @@
     "eslint-plugin-n": "^15.2.4",
     "eslint-plugin-promise": "^6.0.0",
     "sass": "^1.54.5",
+    "tsc-watch": "^5.0.3",
     "typescript": "^4.7.4",
     "zep-script": "0.5.0"
   }

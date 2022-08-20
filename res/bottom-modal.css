@@ -1,15 +1,18 @@
+h1, h2, h3, h4, h5, h6, p, span {
+  padding: 0;
+  margin: 0;
+}
+
 #modal {
   width: 500px;
   height: 250px;
   background-color: blueviolet;
-  border-radius: 10px;
-  width: 100%;
-  height: 100%;
+  border-radius: 1rem;
   display: flex;
   flex-direction: column;
   justify-content: start;
   align-items: center;
-  padding: 5px;
+  padding: 1rem;
 }
 
 .cards-horizontal {
@@ -18,6 +21,36 @@
   flex-direction: row;
   justify-content: space-evenly;
   align-items: center;
+}
+
+.cards-vertical {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+}
+
+section {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+}
+
+.container .center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+.container .left {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
 }
 
 .card {

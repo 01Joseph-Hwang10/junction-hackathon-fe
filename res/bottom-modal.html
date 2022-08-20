@@ -2,18 +2,39 @@
   <link rel="stylesheet" href="bottom-modal.css" />
 </head>
 
+<!-- 
+농장에 작물이 없을때:
+- #select-crop <- 작물 선택
+농장에 작물이 있을때:
+- #select-status <- 농작물 상태 및 설정
+    - #select-sow <- 파종 설정
+    - #select-irrigation <- 관개 설정
+    - #select-topdressing <- 시비 설정
+    - #select-cultivation <- 경작 설정
+ -->
+
 <div id="modal">
   <!-- Indicator -->
-  <h1></h1>
-  <!-- 농지에 작물이 없을때 -->
-  <section id="select-crop">
-    <h2>농작물 선택</h2>
-    <div class="cards cards-horizontal"></div>
+  <h1 id="indicator"></h1>
+  <!-- 작물 선택 -->
+  <section id="select-crop" class="empty-crop">
+    <div class="container center">
+      <h2>농작물 선택</h2>
+      <div class="cards cards-horizontal"></div>
+    </div>
   </section>
-  <!-- 농지에 작물이 있을때 -->
-  <section id="select" style="display: none;">
-    <h2></h2>
-    <div class="cards cards-horizontal"></div>
+  <!-- 액션 선택 -->
+  <section id="select-status" class="has-crop" style="display: none;">
+    <!-- Progress -->
+    <div class="container center">
+      <h2>농작물 생육 정도</h2>
+      <progress value="0"></progress>
+    </div>
+    <!-- Actions -->
+    <div class="container center">
+      <h2>관리하기</h2>
+      <div class="cards cards-horizontal"></div>
+    </div>
   </section>
 </div>
 

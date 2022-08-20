@@ -92,6 +92,13 @@ var registerSelectStatusUI = function (info) {
     var buttons = appendButtonCards(Object.keys(actions), selectStatus);
     var sowButton = buttons[0], irrigationButton = buttons[1], topDressingButton = buttons[2], plowingButton = buttons[3], harvestButton = buttons[4];
     sowButton.onclick = function () { return registerSelectSowUI(info); };
+    irrigationButton.onclick = function () { return registerSelectIrrigationUI(info); };
+    topDressingButton.onclick = function () { return registerSelectTopDressingUI(info); };
+    plowingButton.onclick = function () { return registerSelectPlowingButtonUI(info); };
+    harvestButton.onclick = function () { }; // Some Action when harvest
 };
 var registerSelectSowUI = function (info) { };
+var registerSelectIrrigationUI = function (info) { };
+var registerSelectTopDressingUI = function (info) { };
+var registerSelectPlowingButtonUI = function (info) { };
 registerCropSelectionUI();

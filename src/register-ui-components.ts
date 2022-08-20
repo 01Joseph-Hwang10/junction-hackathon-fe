@@ -106,8 +106,18 @@ const registerSelectStatusUI = (info: LandTileInfo) => {
   const buttons = appendButtonCards(Object.keys(actions), selectStatus)
   const [sowButton, irrigationButton, topDressingButton, plowingButton, harvestButton] = buttons
   sowButton.onclick = () => registerSelectSowUI(info)
+  irrigationButton.onclick = () => registerSelectIrrigationUI(info)
+  topDressingButton.onclick = () => registerSelectTopDressingUI(info)
+  plowingButton.onclick = () => registerSelectPlowingButtonUI(info)
+  harvestButton.onclick = () => {} // Some Action when harvest
 }
 
 const registerSelectSowUI = (info: LandTileInfo) => {}
+
+const registerSelectIrrigationUI = (info: LandTileInfo) => {}
+
+const registerSelectTopDressingUI = (info: LandTileInfo) => {}
+
+const registerSelectPlowingButtonUI = (info: LandTileInfo) => {}
 
 registerCropSelectionUI()

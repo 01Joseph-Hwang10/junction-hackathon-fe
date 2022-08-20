@@ -10,6 +10,7 @@
     - #select-cultivation
     - #select-harvest
 */
+/**==============> Utilities ================>*/
 var clear = function () {
     document.querySelectorAll("section").forEach(function (section) {
         section.setAttribute("style", "display: none;");
@@ -41,11 +42,30 @@ var getButtonCard = function () {
     return document.querySelector("#button-card");
 };
 var getOption = function () { return document.querySelector('#option'); };
+/**<============== End Utilities <================*/
+/**==============> Constants ================>*/
 var cropSelection = {
     Japonica: "쌀",
     Tomato: "토마토",
     Corn: "옥수수"
 };
+var actions = {
+    sow: "파종",
+    irrigation: "관개",
+    topdressing: "시비",
+    plowing: "경운",
+    harvest: "수확"
+};
+var sowMethod = {
+    'direct': '직접',
+    'indirect': '간접'
+};
+var sowGap = {
+    'narrow': '좁게',
+    'wide': '넓게'
+};
+/**<============== End Constants <================*/
+/**==============> Appenders ================>*/
 var appendButtonCards = function (items, to) {
     // Clear cards
     var cards = to.querySelectorAll(".card");
@@ -68,63 +88,6 @@ var appendButtonCards = function (items, to) {
         return buttons.push(button);
     });
     return buttons;
-};
-var registerCropSelectionUI = function (range) {
-    // Initialize UI
-    clear();
-    show("#select-crop");
-    hideBackButton();
-    // Indicator
-    setIndicator("비어있는 농지");
-    // Crop Selection
-    var selectCrop = document.querySelector("#select-crop");
-    var buttons = appendButtonCards(cropSelection, selectCrop);
-    buttons.forEach(function (button) {
-        button.onclick = function () {
-            var crop = button.getAttribute("to");
-            registerSelectStatusUI({
-                crop: crop,
-                range: range,
-                progress: 0,
-                id: Math.random().toString()
-            });
-        };
-    });
-};
-var actions = {
-    sow: "파종",
-    irrigation: "관개",
-    topdressing: "시비",
-    plowing: "경운",
-    harvest: "수확"
-};
-var registerSelectStatusUI = function (info) {
-    // Initialize UI
-    clear();
-    show("#select-status");
-    hideBackButton();
-    // Title Statement
-    setIndicator(getStatusStatement(cropSelection[info.crop]));
-    // Progress
-    var selectStatus = document.querySelector("#select-status");
-    var progress = selectStatus.querySelector("progress");
-    progress.value = info.progress * 100;
-    // Actions
-    var buttons = appendButtonCards(actions, selectStatus);
-    var sowButton = buttons[0], irrigationButton = buttons[1], topDressingButton = buttons[2], plowingButton = buttons[3], harvestButton = buttons[4];
-    sowButton.onclick = function () { return registerSelectSowUI(info); };
-    irrigationButton.onclick = function () { return registerSelectIrrigationUI(info); };
-    topDressingButton.onclick = function () { return registerSelectTopDressingUI(info); };
-    plowingButton.onclick = function () { return registerSelectPlowingButtonUI(info); };
-    harvestButton.onclick = function () { }; // Some Action when harvest
-};
-var sowMethod = {
-    'direct': '직접',
-    'indirect': '간접'
-};
-var sowGap = {
-    'narrow': '좁게',
-    'wide': '넓게'
 };
 var appendOptions = function (options, to) {
     // Clear options
@@ -154,6 +117,53 @@ var appendOptions = function (options, to) {
     });
     return opts;
 };
+/**<============== End Appenders <================*/
+/**==============> CropSelection ================>*/
+var registerCropSelectionUI = function (range) {
+    // Initialize UI
+    clear();
+    show("#select-crop");
+    hideBackButton();
+    // Indicator
+    setIndicator("비어있는 농지");
+    // Crop Selection
+    var selectCrop = document.querySelector("#select-crop");
+    var buttons = appendButtonCards(cropSelection, selectCrop);
+    buttons.forEach(function (button) {
+        button.onclick = function () {
+            var crop = button.getAttribute("to");
+            registerSelectStatusUI({
+                crop: crop,
+                range: range,
+                progress: 0,
+                id: Math.random().toString()
+            });
+        };
+    });
+};
+/**<============== End CropSelection <================*/
+/**==============> Select Status ================>*/
+var registerSelectStatusUI = function (info) {
+    // Initialize UI
+    clear();
+    show("#select-status");
+    hideBackButton();
+    // Title Statement
+    setIndicator(getStatusStatement(cropSelection[info.crop]));
+    // Progress
+    var selectStatus = document.querySelector("#select-status");
+    var progress = selectStatus.querySelector("progress");
+    progress.value = info.progress * 100;
+    // Actions
+    var buttons = appendButtonCards(actions, selectStatus);
+    var sowButton = buttons[0], irrigationButton = buttons[1], topDressingButton = buttons[2], plowingButton = buttons[3], harvestButton = buttons[4];
+    sowButton.onclick = function () { return registerSelectSowUI(info); };
+    irrigationButton.onclick = function () { return registerSelectIrrigationUI(info); };
+    topDressingButton.onclick = function () { return registerSelectTopDressingUI(info); };
+    plowingButton.onclick = function () { }; // Some Action when plowing
+    harvestButton.onclick = function () { }; // Some Action when harvest
+};
+/**<============== End Select Status <================*/
 var registerSelectSowUI = function (info) {
     // Initialize UI
     clear();
@@ -204,9 +214,16 @@ var registerSelectSowUI = function (info) {
         sowDegreeIndicator.innerText = "\uD30C\uC885 \uAC01\uB3C4: ".concat(info.sow.degree);
     }
 };
+/**==============> Irrigation ================>*/
 var registerSelectIrrigationUI = function (info) { };
+/**<============== End Irrigation <================*/
+/**==============> Top Dressing ================>*/
 var registerSelectTopDressingUI = function (info) { };
+/**<============== End Top Dressing <================*/
+/**==============> Plowing ================>*/
 var registerSelectPlowingButtonUI = function (info) { };
+/**<============== End Plowing <================*/
+// Main
 registerCropSelectionUI({
     x: [0, 10],
     y: [0, 10]

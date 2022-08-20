@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="44.568" height="38.667" viewBox="0 0 44.568 38.667">
+    <defs>
+        <filter id="0m38n1eila" x="4.325" y="13.796" width="22.825" height="24.87" filterUnits="userSpaceOnUse">
+            <feOffset dy="3"/>
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feFlood flood-opacity=".161"/>
+            <feComposite operator="in" in2="blur"/>
+            <feComposite in="SourceGraphic"/>
+        </filter>
+        <filter id="0ysod61dhb" x="7.598" y="13.759" width="22.825" height="24.907" filterUnits="userSpaceOnUse">
+            <feOffset dy="3"/>
+            <feGaussianBlur stdDeviation="3" result="blur-2"/>
+            <feFlood flood-opacity=".161"/>
+            <feComposite operator="in" in2="blur-2"/>
+            <feComposite in="SourceGraphic"/>
+        </filter>
+        <filter id="vnc26c92mc" x="10.871" y="13.796" width="22.825" height="24.87" filterUnits="userSpaceOnUse">
+            <feOffset dy="3"/>
+            <feGaussianBlur stdDeviation="3" result="blur-3"/>
+            <feFlood flood-opacity=".161"/>
+            <feComposite operator="in" in2="blur-3"/>
+            <feComposite in="SourceGraphic"/>
+        </filter>
+        <filter id="v72xhgxtnd" x="14.145" y="13.796" width="22.825" height="24.87" filterUnits="userSpaceOnUse">
+            <feOffset dy="3"/>
+            <feGaussianBlur stdDeviation="3" result="blur-4"/>
+            <feFlood flood-opacity=".161"/>
+            <feComposite operator="in" in2="blur-4"/>
+            <feComposite in="SourceGraphic"/>
+        </filter>
+        <filter id="owfouu0uxe" x="0" y="0" width="44.568" height="34.421" filterUnits="userSpaceOnUse">
+            <feOffset dy="3"/>
+            <feGaussianBlur stdDeviation="3" result="blur-5"/>
+            <feFlood flood-opacity=".161"/>
+            <feComposite operator="in" in2="blur-5"/>
+            <feComposite in="SourceGraphic"/>
+        </filter>
+    </defs>
+    <path data-name="사각형 6302" transform="translate(7.43 1.399)" style="fill:#fff" d="M0 0h30v30H0z"/>
+    <g data-name="그룹 13941">
+        <g style="filter:url(#0m38n1eila)">
+            <path data-name="패스 5493" d="M85.86 284.2a.52.52 0 0 1-.273-.075.531.531 0 0 1-.183-.728l3.184-5.307a.531.531 0 0 1 .911.546l-3.184 5.307a.532.532 0 0 1-.455.257zm0 0" transform="translate(-71.72 -257.78)" style="stroke-width:.5px;fill:#7bbbff;stroke:#7bbbff"/>
+        </g>
+        <g style="filter:url(#0ysod61dhb)">
+            <path data-name="패스 5494" d="M149.86 284.2a.52.52 0 0 1-.273-.075.531.531 0 0 1-.182-.728l3.184-5.307a.531.531 0 1 1 .911.546l-3.184 5.307a.532.532 0 0 1-.456.257zm0 0" transform="translate(-132.44 -257.78)" style="stroke-width:.5px;fill:#7bbbff;stroke:#7bbbff"/>
+        </g>
+        <g style="filter:url(#vnc26c92mc)">
+            <path data-name="패스 5495" d="M213.86 284.2a.52.52 0 0 1-.273-.075.531.531 0 0 1-.182-.728l3.184-5.307a.531.531 0 1 1 .911.546l-3.184 5.307a.532.532 0 0 1-.456.257zm0 0" transform="translate(-193.17 -257.78)" style="stroke-width:.5px;fill:#7bbbff;stroke:#7bbbff"/>
+        </g>
+        <g style="filter:url(#v72xhgxtnd)">
+            <path data-name="패스 5496" d="M277.86 284.2a.52.52 0 0 1-.273-.075.531.531 0 0 1-.183-.728l3.184-5.307a.531.531 0 1 1 .911.546l-3.184 5.307a.532.532 0 0 1-.455.257zm0 0" transform="translate(-253.9 -257.78)" style="stroke-width:.5px;fill:#7bbbff;stroke:#7bbbff"/>
+        </g>
+        <g style="filter:url(#owfouu0uxe)">
+            <path data-name="패스 5497" d="M20.094 16.421a.531.531 0 1 1 0-1.061 4.839 4.839 0 0 0 4.888-4.776 4.839 4.839 0 0 0-4.888-4.776 4.927 4.927 0 0 0-1.517.261.55.55 0 0 1-.668-.3A7.1 7.1 0 0 0 4.407 7.6a.534.534 0 0 1-.412.449 3.717 3.717 0 0 0-2.909 3.6 3.763 3.763 0 0 0 3.8 3.715.531.531 0 1 1 0 1.061A4.839 4.839 0 0 1 0 11.645a4.768 4.768 0 0 1 3.381-4.533 8.2 8.2 0 0 1 15.325-2.186 5.669 5.669 0 0 1 1.388-.181 5.915 5.915 0 0 1 5.974 5.838 5.915 5.915 0 0 1-5.974 5.838zm0 0" transform="translate(9.25 5.75)" style="fill:#c7c7c7;stroke:#c7c7c7;stroke-width:.5px"/>
+        </g>
+    </g>
+</svg>

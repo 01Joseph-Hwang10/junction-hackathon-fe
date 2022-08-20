@@ -1,10 +1,76 @@
 <head>
-  <link rel="stylesheet" href="time-modal.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
 </head>
 
-<div id="time-modal">
-  <span class="time-text">2022년 8월 20일 (토) 오후 3시 17분 05초</span>
+<div id="time-modal-container">
+  <div id="time-weather">
+    <img src="https://d3yor8z393217.cloudfront.net/sun.svg" />
+  </div>
+
+  <div id="time-modal">
+    <span id="time-text"></span>
+  </div>
 </div>
 
-<!-- This is for test -->
-<!-- <script src="../src/register-ui-components.js" defer></script> -->
+<script>
+  window.addEventListener("message", (e) => {
+    // state라는 태그 밸류를 보냈으니 아래 형태로 받는다
+    const { action, payload } = e.data;
+    // 위의 id test 라는 곳의 텍스트로 적용한다
+    if (action === "update-current-time") {
+      document.getElementById("time-text").innerHTML = payload;
+    }
+  });
+</script>
+
+<style>
+  #time-modal-container {
+    display: flex;
+    align-items: center;
+  }
+
+  #time-modal {
+    min-width: 278px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 14px 22px;
+    background-color: white;
+    border-radius: 24px;
+    box-shadow: 1px 1px 6px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  #time-modal-container #time-weather {
+    background-color: white;
+    height: 50px;
+    width: 50px;
+    max-height: 50px;
+    max-width: 50px;
+    min-height: 50px;
+    min-width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 25px;
+    margin-right: 8px;
+  }
+
+  #time-modal #time-text {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.32px;
+    text-align: center;
+    color: #000;
+  }
+
+  #time-modal #time-text #real-time {
+    font-family: "Montserrat", sans-serif;
+  }
+</style>

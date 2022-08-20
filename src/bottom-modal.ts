@@ -118,7 +118,11 @@ const registerSelectStatusUI = (info: LandTileInfo) => {
   harvestButton.onclick = () => {} // Some Action when harvest
 }
 
-const registerSelectSowUI = (info: LandTileInfo) => {};
+const registerSelectSowUI = (info: LandTileInfo) => {
+  // Initialize UI
+  clear();
+  show("#select-sow");
+};
 
 const registerSelectIrrigationUI = (info: LandTileInfo) => {}
 

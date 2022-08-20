@@ -10,8 +10,6 @@
     - #select-cultivation
     - #select-harvest
 */
-
-exports.setTime = void 0;
 var clear = function () {
     document.querySelectorAll("section").forEach(function (section) {
         section.setAttribute("style", "display: none;");
@@ -102,7 +100,11 @@ var registerSelectStatusUI = function (info) {
     plowingButton.onclick = function () { return registerSelectPlowingButtonUI(info); };
     harvestButton.onclick = function () { }; // Some Action when harvest
 };
-var registerSelectSowUI = function (info) { };
+var registerSelectSowUI = function (info) {
+    // Initialize UI
+    clear();
+    show("#select-sow");
+};
 var registerSelectIrrigationUI = function (info) { };
 var registerSelectTopDressingUI = function (info) { };
 var registerSelectPlowingButtonUI = function (info) { };
@@ -116,4 +118,3 @@ var setTime = function (timeText) {
         dom.innerHTML = timeText;
     }
 };
-exports.setTime = setTime;

@@ -3,51 +3,37 @@
  */
 
 import "zep-script";
-import type { CropType, LandTileInfo, UserStorage } from "./src/types";
+import type { LandTileInfo, UserStorage, UserTag } from "./src/types";
+
+type Action = 'update-current-tile-info'
+
+const actionCreator = <T = any>(action: Action, payload: T) => {
+  return {
+    action,
+    payload,
+  };
+}
 
 /**==============> Initializing ================>*/
 
 // Add control panels and indicators
 ScriptApp.onJoinPlayer.Add((player) => {
-  // Bottom Modal
-  player.showWidget("bottom-modal.html", "bottom", 500, 250);
-  // Top Indicator
-  player.showWidget("top-indicator.html", "top", 300, 50);
-  registerUIComponents();
+  player.tag = {
+    topIndicator: player.showWidget("bottom-modal.html", "bottom", 500, 250),
+    bottomModal: player.showWidget("top-indicator.html", "top", 300, 50),
+  } as UserTag
   player.storage = JSON.stringify({
     tileInfos: {},
-    assets: null,
+    currentTileInfo: null
   } as UserStorage);
   player.save();
 });
 
 /**<============== End Initializing <================*/
 
-/**==============> UI Components ================>*/
-
-const cropSelection: Record<CropType, string> = {
-  Japonica: "쌀",
-  Tomato: "토마토",
-  Corn: "옥수수",
-};
-
-const registerUIComponents = () => {
-  const buttonCard: HTMLTemplateElement =
-    document.querySelector("#button-card");
-
-  // Add Crop Selection UI at empty crop section
-  const emptyCrop = document.querySelector("#empty-crop");
-  for (const crop of Object.keys(cropSelection)) {
-    const clone = document.importNode(buttonCard.content, true);
-    clone.querySelector("span").innerText = crop;
-    const cards = emptyCrop.querySelector(".cards");
-    cards.appendChild(clone);
-  }
-};
-
-/**<============== End UI Components <================*/
-
 const between = (x: number, min: number, max: number) => x >= min && x <= max;
+
+const getCurrentTile = (storage: UserStorage) => storage.tileInfos[storage.currentTileId]
 
 // Add listeners for land tiles
 const registerLandTileListener = ({
@@ -70,33 +56,17 @@ const registerLandTileListener = ({
   });
 
   // Update current tile info when player touches the tile
-  ScriptApp.onObjectTouched.Add((sender, x, y, tileID) => {
+  ScriptApp.onObjectTouched.Add((sender, x, y) => {
     const [xmin, xmax] = range.x;
     const [ymin, ymax] = range.y;
     if (between(x, xmin, xmax) && between(y, ymin, ymax)) {
       const storage: UserStorage = JSON.parse(sender.storage || "{}");
-      window.localStorage.setItem(
-        "CurrentTileInfo",
-        JSON.stringify(storage.tileInfos[id])
-      );
-      window.dispatchEvent(
-        new StorageEvent("storage", {
-          key: "CurrentTileInfo",
-        })
-      );
+      storage.currentTileId = id;
+      sender.storage = JSON.stringify(storage);
+      sender.save();
+      const tag: UserTag = sender.tag
+      tag.bottomModal.sendMessage(actionCreator("update-current-tile-info", getCurrentTile(storage)))
+      tag.topIndicator.sendMessage(actionCreator('update-current-tile-info', getCurrentTile(storage)))
     }
   });
-};
-
-const updateComponents = (info: LandTileInfo) => {
-  // Do HTML manipulation
-};
-
-window.onstorage = (e: StorageEvent) => {
-  if (e.key === "CurrentTileInfo") {
-    const info: LandTileInfo = JSON.parse(
-      window.localStorage.getItem("CurrentTileInfo")
-    );
-    updateComponents(info);
-  }
 };

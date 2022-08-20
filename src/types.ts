@@ -1,3 +1,5 @@
+import { ScriptWidget } from "zep-script";
+
 export type ActionType = 
     | 'sow'
     | 'irrigation'
@@ -48,5 +50,10 @@ export interface LandTileInfo {
 
 export interface UserStorage {
     tileInfos: Record<string, LandTileInfo>;
-    currentTileInfo?: LandTileInfo;
+    currentTileId?: string;
+}
+
+export interface UserTag {
+    bottomModal: ScriptWidget;
+    topIndicator: ScriptWidget;
 }

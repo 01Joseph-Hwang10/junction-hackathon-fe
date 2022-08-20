@@ -7,8 +7,8 @@
     "css:watch": "sass res/ -w",
     "css": "sass res/",
     "lint": "eslint",
-    "compile": "tsc",
-    "compile:watch": "tsc-watch --onSuccess \"python scripts/remove-undefined.py\""
+    "compile": "tsc --outDir res",
+    "compile:watch": "tsc-watch --outDir ./res --onSuccess \"python scripts/remove-undefined.py\""
   },
   "devDependencies": {
     "@babel/cli": "^7.18.6",

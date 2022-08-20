@@ -15,7 +15,11 @@
 
 <div id="modal">
   <!-- Indicator -->
-  <h2 id="indicator"></h2>
+  <div id="indicator" style="justify-content: center;">
+    <h2 class="side back" style="display: none;"><-</h2>
+    <h2 class="title"></h2>
+    <h2 class="side" style="display: none;"></h2>
+  </div>
 
   <!-- 작물 선택 -->
   <section id="select-crop" class="empty-crop">
@@ -44,20 +48,48 @@
     <div class="container center">
       <h4>파종 설정</h4>
       <div class="cards cards-vertical">
-        <div class="label"></div>
-        <div class="cards"></div>
+        <!-- 파종 방식 -->
+        <select id="sow-method">
+          <option value="" disabled selected>파종 방식을 선택해주세요</option>
+        </select>
+        <!-- 파종 간격 -->
+        <select id="sow-gap">
+          <option value="" disabled selected>파종 간격을 선택해주세요</option>
+        </select>
+        <!-- 파종 각도 -->
+        <div id="sow-degree" class="container row">
+          <span>파종 각도: &nbsp;&nbsp;0</span>
+          <input type="range" min="0" max="360" value="0" />
+        </div>
       </div>
     </div>
   </section>
 
   <!-- 관개 -->
-  <section id="select-irrigation" class="has-crop" style="display: none;"></section>
+  <section id="select-irrigation" class="has-crop" style="display: none;">
+    <div class="container center">
+      <h4>관개 설정</h4>
+      <div class="cards cards-vertical">
+        <!-- 관개 방식 -->
+        <select id="irrigation-method">
+          <option value="" disabled selected>관개 방식을 선택해주세요</option>
+        </select>
+        <!-- 관개 간격 -->
+        <select id="irrigation-gap">
+          <option value="" disabled selected>관개 간격을 선택해주세요</option>
+        </select>
+        <!-- 관개 각도 -->
+        <div id="irrigation-degree" class="container row">
+          <span>관개 각도: &nbsp;&nbsp;0</span>
+          <input type="range" min="0" max="360" value="0" />
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
 
   <!-- 시비 -->
   <section id="select-topdressing" class="has-crop" style="display: none;"></section>
-
-  <!-- 경운 -->
-  <section id="select-plowing" class="has-crop" style="display: none;"></section>
 </div>
 
 <!-- Button Card -->
@@ -67,6 +99,16 @@
     <span></span>
   </button>
 </template>
+
+<!-- Option -->
+<template id="option">
+  <option>
+    <img />
+    <span></span>
+  </option>
+</template>
+
+<!-- Slider -->
 
 <!-- This is for test -->
 <script src="bottom-modal.js" defer></script>

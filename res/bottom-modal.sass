@@ -42,15 +42,29 @@ section
         padding: 0.5rem 0
         filter: greyscale(0.2)
 
-.container.center
-        @include center
-        flex-direction: column
-        width: 100%
+.container
+    @include center()
+    width: 100%
+    display: flex
+    flex-direction: column
 .container.left
-        display: flex
-        flex-direction: column
-        justify-content: start
-        align-items: start
+    justify-content: start
+    align-items: start
+.container.row
+    flex-direction: row
+
+#indicator
+    display: flex
+    justify-content: space-between
+    align-items: center
+    width: 100%
+    
+    .side
+        min-width: 2rem
+        color: white
+        &:hover
+            cursor: pointer
+            filter: grayscale(0.5)
 
 .card
     border: 1px solid gray
@@ -63,3 +77,10 @@ section
     &:hover
         cursor: pointer
         filter: brightness(1.2)
+    span
+        font-size: 1.2rem
+
+option
+    display: flex
+    justify-content: start
+    align-items: center

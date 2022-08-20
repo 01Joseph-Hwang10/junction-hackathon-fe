@@ -1,0 +1,29 @@
+{
+  "name": "junctionhackathon",
+  "version": "0.5.0",
+  "scripts": {
+    "build": "zep-script build",
+    "archive": "zep-script archive",
+    "css:watch": "sass res/ -w",
+    "css": "sass res/",
+    "lint": "eslint",
+    "compile": "tsc"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.18.6",
+    "@babel/core": "^7.18.6",
+    "@babel/preset-typescript": "^7.18.6",
+    "@types/node": "^18.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.33.1",
+    "@typescript-eslint/parser": "^5.33.1",
+    "@vercel/ncc": "^0.34.0",
+    "eslint": "^8.22.0",
+    "eslint-config-standard-with-typescript": "^22.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.4",
+    "eslint-plugin-promise": "^6.0.0",
+    "sass": "^1.54.5",
+    "typescript": "^4.7.4",
+    "zep-script": "0.5.0"
+  }
+}

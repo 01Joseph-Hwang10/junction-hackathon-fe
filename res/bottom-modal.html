@@ -338,8 +338,8 @@
         <img src={src} />
         <span>{title}</span>
       </option>
-    )
-  }
+    );
+  };
 
   const ButtonCard = ({ type, onClick, src, title, description }) => {
     return (
@@ -553,7 +553,7 @@
               <div className="cards cards-vertical">
                 <select id="sow-method" value="default">
                   <option value="default">파종 방식을 선택해주세요</option>
-                  {Object.keys(sowMethods).map((key) => (
+                  {Object.keys(sowMethod).map((key) => (
                     <Option title={sowMethod[key]} value={key} />
                   ))}
                 </select>
@@ -587,7 +587,7 @@
               <div className="cards cards-vertical">
                 <select id="irrigation-method" value="default">
                   <option value="default">관개 방식을 선택해주세요</option>
-                  {Object.keys(irrigationMethods).map((key) => (
+                  {Object.keys(irrigationMethod).map((key) => (
                     <Option title={irrigationMethod[key]} value={key} />
                   ))}
                 </select>
@@ -619,7 +619,7 @@
                   <option value="" disabled selected>
                     시비 방식을 선택해주세요
                   </option>
-                  {Object.keys(topDressingMethods).map((key) => (
+                  {Object.keys(topDressingMethod).map((key) => (
                     <Option title={topDressingMethod[key]} value={key} />
                   ))}
                 </select>

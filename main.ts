@@ -96,6 +96,8 @@ const reducer = (widget: ScriptWidget, player: ScriptPlayer, action: Action) => 
       break;
     case 'set-crop':
       tileInfo.crop = action.payload;
+      player.storage = JSON.stringify(storage);
+      player.save();
       ScriptApp.httpPost(`${serverUrl}/first_cal?`.concat(generateAPIQueryParams(0, 0, 0)), {}, {}, (res: any) => {
         const response = JSON.parse(res);
         player.showCenterLabel(res);

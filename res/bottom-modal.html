@@ -407,6 +407,8 @@
             setCurrentTileInfo(tileInfo);
             setSelectCropVisible(false);
             setSelectStatusVisible(true);
+          } else {
+            setCurrentTileInfo(tileInfo);
           }
         }
       };
@@ -416,6 +418,10 @@
         window.removeEventListener('message', handleMessage);
       };
     }, []);
+
+    useEffect(() => {
+      logger.info(`current tile info changed >>>>>>>>>>> ${JSON.stringify(currentTileInfo)}`);
+    }, [currentTileInfo]);
 
     const Indicator = ({ title, subTitle, backButtonVisible = true, onClickBack }) => {
       return (
@@ -487,7 +493,15 @@
           <section id="select-status" className="has-crop" style={{ display: selectStatusVisible ? 'flex' : 'none' }}>
             <Indicator
               title={`${cropSelection[currentTileInfo ? currentTileInfo.crop : ''] || '농작물'}의 예상 수확량`}
-              subTitle={<span>{(2038).toLocaleString('ko')}kg</span>}
+              subTitle={
+                <span>
+                  {currentTileInfo
+                    ? (currentTileInfo.harvest || 0) === 0
+                      ? '로딩중'
+                      : (currentTileInfo.harvest || 0).toLocaleString('ko') + 'kg'
+                    : '로딩중'}
+                </span>
+              }
               backButtonVisible={true}
               onClickBack={() => {
                 setSelectCropVisible(true);

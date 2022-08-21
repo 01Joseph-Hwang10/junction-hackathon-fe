@@ -25,7 +25,8 @@ export type ActionType =
   // Object control
   | 'overwrite-object'
   | 'add-object'
-  | 'remove-object';
+  | 'remove-object'
+  | 'say-to-all';
 
 export interface AppObject {
   id: string;

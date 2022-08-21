@@ -92,7 +92,7 @@ const reducer = (widget: ScriptWidget, player: ScriptPlayer, action: Action) => 
       player.save();
       break;
     case 'request-current-tile-info':
-      widget.sendMessage(actionCreatorGame('response-current-tile-info', tileInfo));
+      widget.sendMessage(actionCreatorGame('response-current-tile-info', { type: action.payload, data: tileInfo }));
       break;
     case 'set-crop':
       tileInfo.crop = action.payload;
@@ -100,8 +100,9 @@ const reducer = (widget: ScriptWidget, player: ScriptPlayer, action: Action) => 
       player.save();
       ScriptApp.httpPost(`${serverUrl}/first_cal?`.concat(generateAPIQueryParams(0, 0, 0)), {}, {}, (res: any) => {
         const response = JSON.parse(res);
-        player.showCenterLabel(res);
+        // player.showCenterLabel(res);
         const [date, harvest, leaf] = response;
+        // ScriptApp.sayToAll(`${JSON.stringify({ date, harvest, leaf })}`);
         tileInfo.harvest = harvest;
         tileInfo.progress = leaf / 1000;
         storage.tileInfos[storage.currentTileId] = tileInfo;
@@ -163,6 +164,9 @@ const reducer = (widget: ScriptWidget, player: ScriptPlayer, action: Action) => 
       storage.tileInfos[storage.currentTileId] = tileInfo;
       player.storage = JSON.stringify(storage);
       player.save();
+      break;
+    case 'say-to-all':
+      ScriptApp.sayToAll(JSON.stringify(action.payload));
       break;
     default:
       break;

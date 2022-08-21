@@ -417,6 +417,10 @@
       };
     }, []);
 
+    useEffect(() => {
+      logger.info(`current tile info changed >>>>>>>>>>> ${JSON.stringify(currentTileInfo)}`);
+    }, [currentTileInfo]);
+
     const Indicator = ({ title, subTitle, backButtonVisible = true, onClickBack }) => {
       return (
         <div id="indicator">

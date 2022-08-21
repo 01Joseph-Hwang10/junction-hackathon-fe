@@ -486,8 +486,8 @@
 
           <section id="select-status" className="has-crop" style={{ display: selectStatusVisible ? 'flex' : 'none' }}>
             <Indicator
-              title={`${cropSelection[currentTileInfo ? currentTileInfo.crop : ''] || '농작물'}의 생육 정도`}
-              subTitle={<progress max="100" value="0"></progress>}
+              title={`${cropSelection[currentTileInfo ? currentTileInfo.crop : ''] || '농작물'}의 예상 수확량`}
+              subTitle={<span>{(2038).toLocaleString('ko')}kg</span>}
               backButtonVisible={true}
               onClickBack={() => {
                 setSelectCropVisible(true);

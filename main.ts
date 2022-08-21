@@ -21,9 +21,9 @@ const generateAPIQueryParams = (is_actioned: 0 | 1, last_leaf_width: number, las
     last_yield_amount,
   }).reduce((acc, [key, value]) => acc + key + '=' + value + '&', '');
   return queryParamEndsWithAmpersand.substring(0, queryParamEndsWithAmpersand.length - 1);
-}
+};
 
-const serverUrl = 'https://bitter-seals-kick-210-124-96-82.loca.lt'
+const serverUrl = 'https://bitter-seals-kick-210-124-96-82.loca.lt';
 
 const createLandTileInfo = (range: LandTileInfo['range']): void => {
   const id = Date.now().toString();
@@ -71,7 +71,7 @@ const addListenerTo = (
   widget.onMessage.Add((sender, data) => callback(widget, sender, data));
 };
 
-const appObjects: Record<string, ScriptDynamicResource> = {}
+const appObjects: Record<string, ScriptDynamicResource> = {};
 
 /**==============> Initializing ================>*/
 
@@ -83,13 +83,13 @@ const reducer = (widget: ScriptWidget, player: ScriptPlayer, action: Action) => 
       tileInfo.irrigation.amount++;
       storage.tileInfos[storage.currentTileId] = tileInfo;
       player.storage = JSON.stringify(storage);
-      player.save()
+      player.save();
       break;
     case 'add-plowing':
       tileInfo.plowing++;
       storage.tileInfos[storage.currentTileId] = tileInfo;
       player.storage = JSON.stringify(storage);
-      player.save()
+      player.save();
       break;
     case 'request-current-tile-info':
       widget.sendMessage(actionCreatorGame('response-current-tile-info', tileInfo));
@@ -104,52 +104,52 @@ const reducer = (widget: ScriptWidget, player: ScriptPlayer, action: Action) => 
         tileInfo.progress = leaf / 1000;
         storage.tileInfos[storage.currentTileId] = tileInfo;
         player.storage = JSON.stringify(storage);
-        player.save()
-      })
-      const sprite = ScriptApp.loadSpritesheet('Assets/corn seed.png')
-      ScriptMap.putObject(tileInfo.range.x[0], tileInfo.range.y[0], sprite, {overwrite: true});
-      break
+        player.save();
+      });
+      const sprite = ScriptApp.loadSpritesheet('Assets/corn seed.png');
+      ScriptMap.putObject(tileInfo.range.x[0], tileInfo.range.y[0], sprite, { overwrite: true });
+      break;
     case 'set-topdressing':
       tileInfo.topdressing = action.payload;
       storage.tileInfos[storage.currentTileId] = tileInfo;
       player.storage = JSON.stringify(storage);
-      player.save()
-      break
+      player.save();
+      break;
     case 'set-inventory':
       tileInfo.inventory = action.payload;
       storage.tileInfos[storage.currentTileId] = tileInfo;
       player.storage = JSON.stringify(storage);
-      player.save()
-      break
+      player.save();
+      break;
     case 'set-irrigation':
       tileInfo.irrigation = action.payload;
       storage.tileInfos[storage.currentTileId] = tileInfo;
       player.storage = JSON.stringify(storage);
-      player.save()
-      break
+      player.save();
+      break;
     case 'set-plowing':
       tileInfo.plowing = action.payload;
       storage.tileInfos[storage.currentTileId] = tileInfo;
       player.storage = JSON.stringify(storage);
-      player.save()
-      break
+      player.save();
+      break;
     case 'set-sow':
       tileInfo.sow = action.payload;
       storage.tileInfos[storage.currentTileId] = tileInfo;
       player.storage = JSON.stringify(storage);
-      player.save()
-      break
+      player.save();
+      break;
     case 'harvest':
       tileInfo.inventory = {
         ...tileInfo.inventory,
         [tileInfo.crop]: tileInfo.inventory[tileInfo.crop] + tileInfo.harvest,
-      }
-      tileInfo.harvest = 0
-      tileInfo.crop = null
-      tileInfo.progress = 0
+      };
+      tileInfo.harvest = 0;
+      tileInfo.crop = null;
+      tileInfo.progress = 0;
       tileInfo.irrigation = {
         amount: 0,
-      }
+      };
       tileInfo.topdressing = {
         material: {
           nitro: 0,
@@ -157,22 +157,22 @@ const reducer = (widget: ScriptWidget, player: ScriptPlayer, action: Action) => 
           cali: 0,
         },
         depth: 0,
-      }
+      };
       storage.tileInfos[storage.currentTileId] = tileInfo;
       player.storage = JSON.stringify(storage);
-      player.save()
-      break
+      player.save();
+      break;
     default:
       break;
   }
 };
 
-let notOnLand = true
+let notOnLand = true;
 
 // Add control panels and indicators
 ScriptApp.onJoinPlayer.Add((player) => {
   // Declare widgets
-  const bottomModal = player.showWidget('bottom-modal.html', 'bottom', 1200, 420);
+  const bottomModal = player.showWidget('bottom-modal.html', 'bottom', 1000, 420);
   // const bottomModal = player.showWidget("top-indicator.html", "top", 300, 50);
   const timeModal = player.showWidget('time-modal.html', 'top', 350, 80);
 
@@ -199,17 +199,17 @@ ScriptApp.onJoinPlayer.Add((player) => {
   player.sendUpdated();
 });
 
-let acc = 0
+let acc = 0;
 
 ScriptApp.onUpdate.Add((ms) => {
-  acc += ms
+  acc += ms;
   if (acc > 100) {
-    acc = 0
-    return
+    acc = 0;
+    return;
   }
   ScriptApp.players.map((player) => {
     const tag: UserTag = player.tag;
-    const currentTime = {x: player.tileX, y: player.tileY}
+    const currentTime = { x: player.tileX, y: player.tileY };
     tag.bottomModal.sendMessage(actionCreatorGame('current-time', currentTime));
     tag.timeModal.sendMessage(actionCreatorGame('current-time', currentTime));
 
@@ -220,22 +220,22 @@ ScriptApp.onUpdate.Add((ms) => {
       notOnLand = notOnLand && registerLandTileListener(player, tileInfo);
     });
     if (notOnLand) {
-      player.tag.timeModal.sendMessage(actionCreatorGame("hide-crop-ui", null));
-      player.tag.bottomModal.sendMessage(actionCreatorGame("hide-crop-ui", null));
+      player.tag.timeModal.sendMessage(actionCreatorGame('hide-crop-ui', null));
+      player.tag.bottomModal.sendMessage(actionCreatorGame('hide-crop-ui', null));
     }
 
     Object.values(storage.tileInfos).forEach((tileInfo) => {
       if (!tileInfo.crop) return;
       ScriptApp.httpPost(`${serverUrl}/after_cal?`.concat(generateAPIQueryParams(1, 0, 0)), {}, {}, (res) => {
         const response = JSON.parse(res);
-        const [date, harvest, leaf] = response.data
+        const [date, harvest, leaf] = response.data;
         tileInfo.harvest = harvest;
         tileInfo.progress = leaf / 1000;
         storage.tileInfos[storage.currentTileId] = tileInfo;
         player.storage = JSON.stringify(storage);
-      })
-    })
-    player.save()
+      });
+    });
+    player.save();
   });
 });
 

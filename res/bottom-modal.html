@@ -3,18 +3,6 @@
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
   <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
   <script src="https://unpkg.com/styled-components@4.0.1/dist/styled-components.min.js"></script>
-</head>
-
-<!-- 
-농장에 작물이 없을때:
-- #select-crop <- 작물 선택
-농장에 작물이 있을때:
-- #select-status <- 농작물 상태 및 설정
-    - #select-sow <- 파종 설정
-    - #select-irrigation <- 관개 설정
-    - #select-topdressing <- 시비 설정
-    - #select-plowing <- 경작 설정
- -->
 
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap');
@@ -216,27 +204,26 @@
 
   /*# sourceMappingURL=bottom-modal.css.map */
 </style>
+</head>
 
-<div id="modal-top-container">
-</div>
-  <!-- Button Card -->
-  <template id="button-card">
-    <button class="card">
-      <img />
-      <span></span>
-    </button>
-  </template>
+<!-- 
+농장에 작물이 없을때:
+- #select-crop <- 작물 선택
+농장에 작물이 있을때:
+- #select-status <- 농작물 상태 및 설정
+    - #select-sow <- 파종 설정
+    - #select-irrigation <- 관개 설정
+    - #select-topdressing <- 시비 설정
+    - #select-plowing <- 경작 설정
+ -->
 
-  <!-- Option -->
-  <template id="option">
-    <option>
-      <img />
-      <span></span>
-    </option>
-  </template>
+<body>
+  <div id="modal-top-container">
+  </div>
+</body>
 
   <!-- Slider -->
-  <script type="text/babel" defer>
+  <script type="text/babel">
 
 const iconSelection = {
   Japonica: 'https://d3yor8z393217.cloudfront.net/rice.svg',

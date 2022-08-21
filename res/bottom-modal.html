@@ -236,7 +236,7 @@
   </template>
 
   <!-- Slider -->
-  <script type="text/babel">
+  <script type="text/babel" defer>
 
 const iconSelection = {
   Japonica: 'https://d3yor8z393217.cloudfront.net/rice.svg',
@@ -288,14 +288,16 @@ const topDressingMethod = {
   'banded-on-beneath-surface': '묻는 방식',
 };
 
+const { useEffect, useState } = React
+
 const requestCurrentTileInfo = () => {
   return new Promise((resolve) => {
-    window.addEventListener('message', ({ data }) => {
+    window.parent.addEventListener('message', ({ data }) => {
       if (data.action === 'response-current-tile-info') {
         resolve(data.payload);
       }
     });
-    window.postMessage(actionCreatorBottomModal('request-current-tile-info', null), '*');
+    window.parent.postMessage(actionCreatorBottomModal('request-current-tile-info', null), '*');
   });
 };
 
@@ -315,6 +317,17 @@ const requestCurrentTileInfo = () => {
       const [selectIrrigationVisible, setSelectIrrigationVisible] = useState(false);
       const [selectTopDressingVisible, setSelectTopDressingVisible] = useState(false);
       const [currentTileInfo, setCurrentTileInfo] = useState(null);
+      useEffect(() => {
+        window.parent.addEventListener('message', ({ data }) => {
+          if (data.action === 'show-crop-ui') {
+            if (data.payload.crop) {
+              setSelectCropVisible(true)
+            } else {
+              setSelectCropVisible(true)
+            }
+          }
+        });
+      }, [])
       return (
         <div id="modal">
           <div id="indicator">
@@ -438,5 +451,5 @@ const requestCurrentTileInfo = () => {
       )
     }
     const dom = document.getElementById('modal-top-container')
-    ReactDom.createRoot(dom).render(<BottomModal />)
+    ReactDOM.createRoot(dom).render(<BottomModal />)
   </script>

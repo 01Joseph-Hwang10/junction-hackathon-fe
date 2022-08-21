@@ -33,12 +33,10 @@ const createLandTileInfo = (range: LandTileInfo['range']): void => {
   };
 };
 
-for (let i = 0; i < 3; i++) {
-  createLandTileInfo({
-    x: [i * 10, (i + 1) * 10],
-    y: [i * 10, (i + 1) * 10],
-  });
-}
+createLandTileInfo({
+  x: [28, 44],
+  y: [23, 44],
+});
 
 const actionCreatorGame = <T = any>(action: ActionType, payload: T) => {
   return {
@@ -67,7 +65,7 @@ const overwriteObjects = (objectInfo: AppObject[]) => {
     if (!appObjects[info.filePath]) {
       appObjects[info.filePath] = ScriptApp.loadSpritesheet(info.filePath);
     }
-    ScriptMap.putObject(info.x, info.y, appObjects[info.filePath]);
+    ScriptMap.putObject(info.x, info.y, appObjects[info.filePath], {overwrite: true});
   }
 }
 
@@ -94,6 +92,8 @@ const reducer = (widget: ScriptWidget, player: ScriptPlayer, action: Action) => 
       tileInfo.crop = action.payload;
       storage.tileInfos[storage.currentTileId] = tileInfo;
       player.storage = JSON.stringify(storage);
+      const sprite = ScriptApp.loadSpritesheet('Assets/corn seed.png')
+      ScriptMap.putObject(tileInfo.range.x[0], tileInfo.range.y[0], sprite, {overwrite: true});
       break
     case 'set-topdressing':
       tileInfo.topdressing = action.payload;

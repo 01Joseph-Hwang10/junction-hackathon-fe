@@ -26,8 +26,11 @@ export type ActionType =
   | 'set-inventory'
   // Object control
   | 'overwrite-object'
+  | 'add-object'
+  | 'remove-object'
 
 export interface AppObject {
+  id: string;
   x: number;
   y: number;
   /**

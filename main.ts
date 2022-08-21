@@ -23,7 +23,7 @@ const generateAPIQueryParams = (is_actioned: 0 | 1, last_leaf_width: number, las
   return queryParamEndsWithAmpersand.substring(0, queryParamEndsWithAmpersand.length - 1);
 };
 
-const serverUrl = 'https://bitter-seals-kick-210-124-96-82.loca.lt';
+const serverUrl = 'https://c831-210-124-96-82.jp.ngrok.io';
 
 const createLandTileInfo = (range: LandTileInfo['range']): void => {
   const id = Date.now().toString();

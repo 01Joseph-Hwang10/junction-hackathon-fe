@@ -108,6 +108,7 @@ const reducer = (widget: ScriptWidget, player: ScriptPlayer, action: Action) => 
         storage.tileInfos[storage.currentTileId] = tileInfo;
         player.storage = JSON.stringify(storage);
         player.save();
+        widget.sendMessage(actionCreatorGame('response-current-tile-info', { type: 'update', data: tileInfo }));
       });
       const sprite = ScriptApp.loadSpritesheet('Assets/corn seed.png');
       ScriptMap.putObject(tileInfo.range.x[0] - 1, tileInfo.range.y[0] - 3, sprite, { overwrite: true });
@@ -234,7 +235,7 @@ ScriptApp.onUpdate.Add((ms) => {
       if (!tileInfo.crop) return;
       ScriptApp.httpPost(`${serverUrl}/after_cal?`.concat(generateAPIQueryParams(1, 0, 0)), {}, {}, (res) => {
         const response = JSON.parse(res);
-        const [date, harvest, leaf] = response.data;
+        const [date, harvest, leaf] = response;
         tileInfo.harvest = harvest;
         tileInfo.progress = leaf / 1000;
         storage.tileInfos[storage.currentTileId] = tileInfo;

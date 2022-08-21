@@ -111,7 +111,7 @@ const reducer = (widget: ScriptWidget, player: ScriptPlayer, action: Action) => 
         widget.sendMessage(actionCreatorGame('response-current-tile-info', { type: 'update', data: tileInfo }));
       });
       const sprite = ScriptApp.loadSpritesheet('Assets/corn seed.png');
-      ScriptMap.putObject(tileInfo.range.x[0] - 1, tileInfo.range.y[0] - 3, sprite, { overwrite: true });
+      ScriptMap.putObject(tileInfo.range.x[0] - 1, tileInfo.range.y[0] - 2, sprite, { overwrite: true });
       break;
     case 'set-topdressing':
       tileInfo.topdressing = action.payload;

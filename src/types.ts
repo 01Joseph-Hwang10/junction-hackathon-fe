@@ -7,10 +7,8 @@ export type ActionType =
   | 'update-current-time'
   | 'request-current-tile-info'
   | 'response-current-tile-info'
-
   | 'show-crop-ui'
   | 'hide-crop-ui'
-
   | 'add-irrigation'
   | 'add-plowing'
   // Harvest
@@ -27,7 +25,7 @@ export type ActionType =
   // Object control
   | 'overwrite-object'
   | 'add-object'
-  | 'remove-object'
+  | 'remove-object';
 
 export interface AppObject {
   id: string;

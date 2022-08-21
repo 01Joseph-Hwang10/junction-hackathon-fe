@@ -3,6 +3,18 @@
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
   <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
   <script src="https://unpkg.com/styled-components@4.0.1/dist/styled-components.min.js"></script>
+</head>
+
+<!-- 
+농장에 작물이 없을때:
+- #select-crop <- 작물 선택
+농장에 작물이 있을때:
+- #select-status <- 농작물 상태 및 설정
+    - #select-sow <- 파종 설정
+    - #select-irrigation <- 관개 설정
+    - #select-topdressing <- 시비 설정
+    - #select-plowing <- 경작 설정
+ -->
 
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap');
@@ -23,6 +35,21 @@
   button {
     background-color: transparent;
     border: none;
+  }
+
+  .card-button {
+    background-color: transparent;
+    border: none;
+  }
+
+  .primary-button {
+    background-color: #58b684;
+    border: none;
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
   }
 
   * {
@@ -65,13 +92,13 @@
     flex-direction: column;
     justify-content: start;
     align-items: center;
+    padding-right: 44px;
   }
 
   section {
     width: 100%;
     height: 100%;
     display: flex;
-    flex-direction: column;
     justify-content: start;
     align-items: center;
   }
@@ -95,6 +122,8 @@
   }
 
   #indicator {
+    display: flex;
+    align-items: center;
     width: 100%;
   }
   #indicator .side {
@@ -122,7 +151,7 @@
     font-size: 16px;
   }
   .card:hover {
-    border-color: blue;
+    border-color: #58b684;
   }
   .card:hover .popup {
     opacity: 1;
@@ -148,6 +177,7 @@
 
   .subtitle {
     font-size: 16px;
+    white-space: pre;
   }
 
   #select-status {
@@ -158,7 +188,7 @@
   .title-wrap {
     display: flex;
     flex-direction: column;
-    padding-left: 50px;
+    padding-left: 20px;
   }
 
   .button-wrap {
@@ -202,241 +232,404 @@
     padding-bottom: 80px;
   }
 
+  select {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border: 1px solid #333333;
+    border-radius: 8px;
+    margin-bottom: 14px;
+  }
+
+  #topdressing-item-container {
+    display: flex;
+    width: 370px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  #topdressing-item {
+    width: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  #topdressing-item:nth-child(2n - 1) {
+    margin-right: 10px;
+  }
+
+  #topdressing-item span {
+    font-size: 14px;
+  }
+
+  #topdressing-item input {
+    width: 100%;
+  }
+
   /*# sourceMappingURL=bottom-modal.css.map */
 </style>
-</head>
 
-<!-- 
-농장에 작물이 없을때:
-- #select-crop <- 작물 선택
-농장에 작물이 있을때:
-- #select-status <- 농작물 상태 및 설정
-    - #select-sow <- 파종 설정
-    - #select-irrigation <- 관개 설정
-    - #select-topdressing <- 시비 설정
-    - #select-plowing <- 경작 설정
- -->
+<div id="modal-top-container"></div>
 
-<body>
-  <div id="modal-top-container">
-  </div>
-</body>
+<!-- Slider -->
+<script type="text/babel">
+  const { useState, useEffect } = React;
 
-  <!-- Slider -->
-  <script type="text/babel">
+  const iconSelection = {
+    Japonica: 'https://d3yor8z393217.cloudfront.net/rice.svg',
+    Tomato: 'https://d3yor8z393217.cloudfront.net/tomato.svg',
+    Corn: 'https://d3yor8z393217.cloudfront.net/corn.svg',
+  };
 
-const iconSelection = {
-  Japonica: 'https://d3yor8z393217.cloudfront.net/rice.svg',
-  Tomato: 'https://d3yor8z393217.cloudfront.net/tomato.svg',
-  Corn: 'https://d3yor8z393217.cloudfront.net/corn.svg',
-};
+  const cropSelection = {
+    Japonica: '쌀',
+    Tomato: '토마토',
+    Corn: '옥수수',
+  };
 
-const cropSelection = {
-  Japonica: '쌀',
-  Tomato: '토마토',
-  Corn: '옥수수',
-};
+  const actions = {
+    sow: '파종',
+    irrigation: '관개',
+    topdressing: '시비',
+    plowing: '경운',
+    harvest: '수확',
+  };
 
-const actions = {
-  sow: '파종',
-  irrigation: '관개',
-  topdressing: '시비',
-  plowing: '경운',
-  harvest: '수확',
-};
+  const descriptionActions = {
+    sow: '파종을 하면 작물을 심을 수 있습니다.',
+    irrigation: '관개를 하면 작물을 물을 수 있습니다.',
+    topdressing: '시비를 하면 작물에 비료를 줄 수 있습니다.',
+    plowing: '경운을 하면 작물을 흙으로 뒤집을 수 있습니다.',
+    harvest: '수확을 하면 작물을 수확할 수 있습니다.',
+  };
 
-const descriptionActions = {
-  sow: '파종을 하면 작물을 심을 수 있습니다.',
-  irrigation: '관개를 하면 작물을 물을 수 있습니다.',
-  topdressing: '시비를 하면 작물에 비료를 줄 수 있습니다.',
-  plowing: '경운을 하면 작물을 흙으로 뒤집을 수 있습니다.',
-  harvest: '수확을 하면 작물을 수확할 수 있습니다.',
-};
+  const sowMethod = {
+    direct: '직접',
+    indirect: '간접',
+  };
 
-const sowMethod = {
-  direct: '직접',
-  indirect: '간접',
-};
+  const sowGap = {
+    narrow: '좁게',
+    wide: '넓게',
+  };
 
-const sowGap = {
-  narrow: '좁게',
-  wide: '넓게',
-};
+  const irrigationMethod = {
+    Flood: 'Flood',
+    Sprinkler: 'Sprinkler',
+    Furrow: 'Furrow',
+  };
 
-const irrigationMethod = {
-  Flood: 'Flood',
-  Sprinkler: 'Sprinkler',
-  Furrow: 'Furrow',
-};
+  const topDressingMethod = {
+    'applied-in-irrigation-water': '관개수식',
+    'band-on-soil': '밴드식',
+    'banded-on-beneath-surface': '묻는 방식',
+  };
 
-const topDressingMethod = {
-  'applied-in-irrigation-water': '관개수식',
-  'band-on-soil': '밴드식',
-  'banded-on-beneath-surface': '묻는 방식',
-};
+  const actionCreatorBottomModal = (action, payload) => {
+    return {
+      action,
+      payload,
+    };
+  };
 
-const { useEffect, useState } = React
+  const ButtonCard = ({ type, onClick, src, title, description }) => {
+    return (
+      <button onClick={onClick} className="card">
+        <span>
+          {type === 'crop' ? (
+            <div class="button-wrap">
+              <img src={src} />
+              <span>{title}</span>
+            </div>
+          ) : (
+            <div class="button-wrap">
+              <span>{title}</span>
+              <div class="popup">{description}</div>
+            </div>
+          )}
+        </span>
+      </button>
+    );
+  };
 
-const requestCurrentTileInfo = () => {
-  return new Promise((resolve) => {
-    window.parent.addEventListener('message', ({ data }) => {
-      if (data.action === 'response-current-tile-info') {
-        resolve(data.payload);
-      }
-    });
-    window.parent.postMessage(actionCreatorBottomModal('request-current-tile-info', null), '*');
-  });
-};
+  const logger = {
+    info: (v) => window.parent.postMessage(actionCreatorBottomModal('say-to-all', JSON.stringify(v)), '*'),
+  };
 
-    const ButtonCard = (props) => {
-      return (
-        <button onClick={props.onClick} className="card">
-          <img src={props.src} />
-          <span>{props.title}</span>
-        </button>
-      )
-    }
-    const BottomModal = () => {
-      const [backButtonVisible, setBackButtonVisible] = useState(false);
-      const [selectCropVisible, setSelectCropVisible] = useState(false);
-      const [selectStatusVisible, setSelectStatusVisible] = useState(false);
-      const [selectSowVisible, setSelectSowVisible] = useState(false);
-      const [selectIrrigationVisible, setSelectIrrigationVisible] = useState(false);
-      const [selectTopDressingVisible, setSelectTopDressingVisible] = useState(false);
-      const [currentTileInfo, setCurrentTileInfo] = useState(null);
-      useEffect(() => {
-        window.parent.addEventListener('message', ({ data }) => {
-          if (data.action === 'show-crop-ui') {
-            if (data.payload.crop) {
-              setSelectCropVisible(true)
-            } else {
-              setSelectCropVisible(true)
-            }
+  const requestCurrentTileInfo = (type) => {
+    window.parent.postMessage(actionCreatorBottomModal('request-current-tile-info', type), '*');
+  };
+
+  const BottomModal = () => {
+    const [backButtonVisible, setBackButtonVisible] = useState(false);
+    const [selectCropVisible, setSelectCropVisible] = useState(false);
+    const [selectStatusVisible, setSelectStatusVisible] = useState(false);
+    const [selectSowVisible, setSelectSowVisible] = useState(false);
+    const [selectIrrigationVisible, setSelectIrrigationVisible] = useState(false);
+    const [selectTopDressingVisible, setSelectTopDressingVisible] = useState(false);
+    const [currentTileInfo, setCurrentTileInfo] = useState(null);
+
+    const handleSelectCrop = async (crop) => {
+      window.parent.postMessage(actionCreatorBottomModal('set-crop', crop), '*');
+      await requestCurrentTileInfo('set-crop');
+    };
+
+    useEffect(() => {
+      const handleMessage = ({ data }) => {
+        if (data.action === 'show-crop-ui') {
+          if (data.payload.crop) {
+            setSelectCropVisible(true);
+          } else {
+            setSelectCropVisible(true);
           }
-        });
-      }, [])
+        } else if (data.action === 'hide-crop-ui') {
+          setBackButtonVisible(false);
+          setSelectCropVisible(false);
+          setSelectStatusVisible(false);
+          setSelectSowVisible(false);
+          setSelectIrrigationVisible(false);
+          setSelectTopDressingVisible(false);
+          setCurrentTileInfo(null);
+        }
+
+        if (data.action === 'response-current-tile-info') {
+          const { type, data: tileInfo } = data.payload;
+          if (type === 'set-crop') {
+            setCurrentTileInfo(tileInfo);
+            setSelectCropVisible(false);
+            setSelectStatusVisible(true);
+          }
+        }
+      };
+      window.addEventListener('message', handleMessage);
+
+      return () => {
+        window.removeEventListener('message', handleMessage);
+      };
+    }, []);
+
+    const Indicator = ({ title, subTitle, backButtonVisible = true, onClickBack }) => {
+      return (
+        <div id="indicator">
+          {backButtonVisible && (
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <svg
+                style={{ cursor: 'pointer', marginRight: 24 }}
+                onClick={onClickBack}
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+                stroke="black"
+                stroke-width="2"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="css-i6dzq1"
+              >
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+              <button className="button-card card" style={{ borderColor: '#58b684' }}>
+                <span>
+                  <div class="button-wrap">
+                    <img src={iconSelection[currentTileInfo ? currentTileInfo.crop : ''] || ''} />
+                  </div>
+                </span>
+              </button>
+            </div>
+          )}
+
+          <div className="title-wrap">
+            <span className="title">{title}</span>
+            <span className="subtitle">{subTitle}</span>
+          </div>
+          <h2 className="side"></h2>
+        </div>
+      );
+    };
+
+    if (
+      selectCropVisible ||
+      selectStatusVisible ||
+      selectSowVisible ||
+      selectIrrigationVisible ||
+      selectIrrigationVisible ||
+      selectTopDressingVisible
+    )
       return (
         <div id="modal">
-          <div id="indicator">
-            <h2 className="side back">{backButtonVisible ? '<-' : ''}</h2>
-            <div className="title-wrap">
-              <span className="title"></span>
-              <span className="subtitle"></span>
-            </div>
-            <h2 className="side"></h2>
-          </div>
-      
-          <section id="select-crop" className="empty-crop" style={{display: selectCropVisible ? 'flex' : 'none'}}>
+          <section id="select-crop" className="empty-crop" style={{ display: selectCropVisible ? 'flex' : 'none' }}>
+            <Indicator title="비어있는 농지" subTitle="수확할 농작물을 선택해주세요." backButtonVisible={false} />
             <div className="container center">
               <div className="cards cards-horizontal">
-                {Object.keys(iconSelection).map((key) => {
-                  const onClick = async () => {
-                    window.postMessage(actionCreatorBottomModal('set-crop', key), '*');
-                    const latestCurrentTileInfo = await requestCurrentTileInfo();
-                    setCurrentTileInfo(latestCurrentTileInfo);
-                    setSelectCropVisible(false);
-                    setSelectStatusVisible(true)
-                  }
-                  return (
-                    <ButtonCard
-                      key={key}
-                      title={cropSelection[key]}
-                      src={iconSelection[key]}
-                      onClick={onClick}
-                    />
-                  )
-                }
-                )}
+                {Object.keys(iconSelection).map((key) => (
+                  <ButtonCard
+                    key={key}
+                    type="crop"
+                    title={cropSelection[key]}
+                    src={iconSelection[key]}
+                    onClick={() => handleSelectCrop(key)}
+                  />
+                ))}
               </div>
             </div>
           </section>
-      
-          <section id="select-status" className="has-crop" style={{display: selectStatusVisible ? 'flex': 'none'}}>
-            <div id="status">
-              <div>
-                <h4>농작물 생육 정도</h4>
-                <progress max="100" value="0"></progress>
-              </div>
-              <div>
-                <h4>관개량: 0L</h4>
-              </div>
-            </div>
+
+          <section id="select-status" className="has-crop" style={{ display: selectStatusVisible ? 'flex' : 'none' }}>
+            <Indicator
+              title={`${cropSelection[currentTileInfo ? currentTileInfo.crop : ''] || '농작물'}의 생육 정도`}
+              subTitle={<progress max="100" value="0"></progress>}
+              backButtonVisible={true}
+              onClickBack={() => {
+                setSelectCropVisible(true);
+                setSelectStatusVisible(false);
+              }}
+            />
             <div className="container center">
-              <h4>관리하기</h4>
               <div className="cards cards-horizontal">
-                <ButtonCard title={actions['sow']} onClick={() => {selectSowVisible(true); selectStatusVisible(false)}} />
-                <ButtonCard title={actions['irrigation']} onClick={() => {selectIrrigationVisible(true); selectStatusVisible(false)}} />
-                <ButtonCard title={actions['topdressing']} onClick={() => {setSelectTopDressingVisible(true); selectStatusVisible(false)}} />
-                <ButtonCard title={actions['plowing']} onClick={() => {}} />
-                <ButtonCard title={actions['harvest']} onClick={() => {}} />
+                <ButtonCard
+                  type="action"
+                  title={actions['sow']}
+                  description={descriptionActions['sow']}
+                  onClick={() => {
+                    setSelectSowVisible(true);
+                    setSelectStatusVisible(false);
+                  }}
+                />
+                <ButtonCard
+                  type="action"
+                  title={actions['irrigation']}
+                  description={descriptionActions['irrigation']}
+                  onClick={() => {
+                    setSelectIrrigationVisible(true);
+                    setSelectStatusVisible(false);
+                  }}
+                />
+                <ButtonCard
+                  type="action"
+                  title={actions['topdressing']}
+                  description={descriptionActions['topdressing']}
+                  onClick={() => {
+                    setSelectTopDressingVisible(true);
+                    setSelectStatusVisible(false);
+                  }}
+                />
+                <ButtonCard
+                  type="action"
+                  title={actions['plowing']}
+                  description={descriptionActions['plowing']}
+                  onClick={() => {}}
+                />
+                <ButtonCard
+                  type="action"
+                  title={actions['harvest']}
+                  description={descriptionActions['harvest']}
+                  onClick={() => {}}
+                />
               </div>
             </div>
           </section>
-      
-          <section id="select-sow" className="has-crop" style={{display: selectSowVisible ? 'flex' : 'none'}}>
+
+          <section id="select-sow" className="has-crop" style={{ display: selectSowVisible ? 'flex' : 'none' }}>
+            <Indicator
+              title="파종 설정"
+              subTitle={descriptionActions['sow']}
+              backButtonVisible={true}
+              onClickBack={() => {
+                setSelectSowVisible(false);
+                setSelectStatusVisible(true);
+              }}
+            />
             <div className="container center">
-              <h4>파종 설정</h4>
               <div className="cards cards-vertical">
-                <select id="sow-method">
-                  <option value="" disabled selected>파종 방식을 선택해주세요</option>
+                <select id="sow-method" value="default">
+                  <option value="default">파종 방식을 선택해주세요</option>
                 </select>
-                <select id="sow-gap">
-                  <option value="" disabled selected>파종 간격을 선택해주세요</option>
+                <select id="sow-gap" value="default">
+                  <option value="default" disabled>
+                    파종 간격을 선택해주세요
+                  </option>
                 </select>
-                <div id="sow-degree" className="container row">
-                  <span>파종 각도: &nbsp;&nbsp;0</span>
-                  <input type="range" min="0" max="360" value="0" />
+              </div>
+            </div>
+          </section>
+
+          <section
+            id="select-irrigation"
+            className="has-crop"
+            style={{ display: selectIrrigationVisible ? 'flex' : 'none' }}
+          >
+            <Indicator
+              title="관개 설정"
+              subTitle={descriptionActions['irrigation']}
+              backButtonVisible={true}
+              onClickBack={() => {
+                setSelectIrrigationVisible(false);
+                setSelectStatusVisible(true);
+              }}
+            />
+            <div className="container center">
+              <div className="cards cards-vertical">
+                <select id="irrigation-method" value="default">
+                  <option value="default">관개 방식을 선택해주세요</option>
+                </select>
+                <div id="add-irrigation" style={{ width: '100%' }}>
+                  <button class="primary-button">물 주기</button>
                 </div>
               </div>
             </div>
           </section>
-      
-          <section id="select-irrigation" className="has-crop" style={{display: selectIrrigationVisible ? 'flex' : 'none'}}>
+
+          <section
+            id="select-topdressing"
+            className="has-crop"
+            style={{ display: selectTopDressingVisible ? 'flex' : 'none' }}
+          >
+            <Indicator
+              title="사비 설정"
+              subTitle={descriptionActions['topdressing']}
+              backButtonVisible={true}
+              onClickBack={() => {
+                setSelectTopDressingVisible(false);
+                setSelectStatusVisible(true);
+              }}
+            />
+
             <div className="container center">
-              <h4>관개 설정</h4>
-              <div className="cards cards-vertical">
-                <select id="irrigation-method">
-                  <option value="" disabled selected>관개 방식을 선택해주세요</option>
-                </select>
-                <div id="add-irrigation">
-                  <button>물 주기</button>
-                </div>
-              </div>
-            </div>
-          </section>
-      
-          <section id="select-topdressing" className="has-crop" style={{display: selectTopDressingVisible ? 'flex' : 'none'}}>
-            <div className="container center">
-              <h4>시비 설정</h4>
               <div className="cards cards-vertical">
                 <select id="topdressing-method">
-                  <option value="" disabled selected>시비 방식을 선택해주세요</option>
+                  <option value="" disabled selected>
+                    시비 방식을 선택해주세요
+                  </option>
                 </select>
-                <div id="topdressing-material">
-                  <span>비료 선택</span>
-                  <div id="topdressing-nitro" className="container row">
+                <div id="topdressing-item-container">
+                  <div id="topdressing-item" className="container row">
                     <span>질소</span>
                     <input type="range" min="0" max="100" value="33" />
                   </div>
-                  <div id="topdressing-phosphorus" className="container row">
+                  <div id="topdressing-item" className="container row">
                     <span>인산</span>
                     <input type="range" min="0" max="100" value="33" />
                   </div>
-                  <div id="topdressing-cali" className="container row">
+                  <div id="topdressing-item" className="container row">
                     <span>칼리</span>
                     <input type="range" min="0" max="100" value="33" />
                   </div>
+                  <div id="topdressing-item" className="container row">
+                    <span>깊이</span>
+                    <input type="range" min="0" max="100" value="0" />
+                  </div>
                 </div>
-                <div id="topdressing-depth" className="container row">
-                  <span>시비 깊이: 0</span>
-                  <input type="range" min="0" max="100" value="0" />
+                <div id="add-irrigation" style={{ width: '100%' }}>
+                  <button class="primary-button">물 주기</button>
                 </div>
               </div>
             </div>
           </section>
         </div>
-      )
-    }
-    const dom = document.getElementById('modal-top-container')
-    ReactDOM.createRoot(dom).render(<BottomModal />)
-  </script>
+      );
+    return null;
+  };
+  const dom = document.getElementById('modal-top-container');
+  ReactDOM.createRoot(dom).render(<BottomModal />);
+</script>

@@ -94,6 +94,7 @@ export interface LandTileInfo {
     depth: number;
   };
   plowing?: number;
+  harvest: number;
   inventory: {
     [key in CropType]: number;
   };

@@ -4,9 +4,26 @@
 
 import 'zep-script';
 import { ScriptDynamicResource, ScriptPlayer, ScriptWidget } from 'zep-script';
-import type { Action, ActionType, AppObject, LandTileInfo, UserStorage, UserTag } from './src/types';
+import type { Action, ActionType, AppObject, CropType, LandTileInfo, UserStorage, UserTag } from './src/types';
 
 const landTileInfos: Record<string, LandTileInfo> = {};
+
+const generateAPIQueryParams = (is_actioned: 0 | 1, last_leaf_width: number, last_yield_amount: number) => {
+  const queryParamEndsWithAmpersand = Object.entries({
+    id: '1234',
+    crop_type: '1',
+    latitude: Math.random() * 100,
+    longitude: Math.random() * 100,
+    created_at: new Date().toISOString(),
+    now_date: Date.now(),
+    is_actioned,
+    last_leaf_width,
+    last_yield_amount,
+  }).reduce((acc, [key, value]) => acc + key + '=' + value + '&', '');
+  return queryParamEndsWithAmpersand.substring(0, queryParamEndsWithAmpersand.length - 1);
+}
+
+const serverUrl = 'https://bitter-seals-kick-210-124-96-82.loca.lt'
 
 const createLandTileInfo = (range: LandTileInfo['range']): void => {
   const id = Date.now().toString();
@@ -30,6 +47,7 @@ const createLandTileInfo = (range: LandTileInfo['range']): void => {
       Tomato: 0,
       Corn: 0,
     },
+    harvest: 0,
   };
 };
 
@@ -55,20 +73,6 @@ const addListenerTo = (
 
 const appObjects: Record<string, ScriptDynamicResource> = {}
 
-/**
- * 
- * @param objectInfo <- `action.payload`
- */
-const overwriteObjects = (objectInfo: AppObject[]) => {
-  ScriptMap.clearAllObjects()
-  for (const info of objectInfo) {
-    if (!appObjects[info.filePath]) {
-      appObjects[info.filePath] = ScriptApp.loadSpritesheet(info.filePath);
-    }
-    ScriptMap.putObject(info.x, info.y, appObjects[info.filePath], {overwrite: true});
-  }
-}
-
 /**==============> Initializing ================>*/
 
 const reducer = (widget: ScriptWidget, player: ScriptPlayer, action: Action) => {
@@ -79,19 +83,28 @@ const reducer = (widget: ScriptWidget, player: ScriptPlayer, action: Action) => 
       tileInfo.irrigation.amount++;
       storage.tileInfos[storage.currentTileId] = tileInfo;
       player.storage = JSON.stringify(storage);
+      player.save()
       break;
     case 'add-plowing':
       tileInfo.plowing++;
       storage.tileInfos[storage.currentTileId] = tileInfo;
       player.storage = JSON.stringify(storage);
+      player.save()
       break;
     case 'request-current-tile-info':
       widget.sendMessage(actionCreatorGame('response-current-tile-info', tileInfo));
       break;
     case 'set-crop':
       tileInfo.crop = action.payload;
-      storage.tileInfos[storage.currentTileId] = tileInfo;
-      player.storage = JSON.stringify(storage);
+      ScriptApp.httpPost(`${serverUrl}/first_cal?`.concat(generateAPIQueryParams(0, 0, 0)), {}, {}, (res) => {
+        const response = JSON.parse(res);
+        const [date, harvest, leaf] = response.data
+        tileInfo.harvest = harvest;
+        tileInfo.progress = leaf / 1000;
+        storage.tileInfos[storage.currentTileId] = tileInfo;
+        player.storage = JSON.stringify(storage);
+        player.save()
+      })
       const sprite = ScriptApp.loadSpritesheet('Assets/corn seed.png')
       ScriptMap.putObject(tileInfo.range.x[0], tileInfo.range.y[0], sprite, {overwrite: true});
       break
@@ -99,29 +112,54 @@ const reducer = (widget: ScriptWidget, player: ScriptPlayer, action: Action) => 
       tileInfo.topdressing = action.payload;
       storage.tileInfos[storage.currentTileId] = tileInfo;
       player.storage = JSON.stringify(storage);
+      player.save()
       break
     case 'set-inventory':
       tileInfo.inventory = action.payload;
       storage.tileInfos[storage.currentTileId] = tileInfo;
       player.storage = JSON.stringify(storage);
+      player.save()
       break
     case 'set-irrigation':
       tileInfo.irrigation = action.payload;
       storage.tileInfos[storage.currentTileId] = tileInfo;
       player.storage = JSON.stringify(storage);
+      player.save()
       break
     case 'set-plowing':
       tileInfo.plowing = action.payload;
       storage.tileInfos[storage.currentTileId] = tileInfo;
       player.storage = JSON.stringify(storage);
+      player.save()
       break
     case 'set-sow':
       tileInfo.sow = action.payload;
       storage.tileInfos[storage.currentTileId] = tileInfo;
       player.storage = JSON.stringify(storage);
+      player.save()
       break
-    case 'overwrite-object':
-      overwriteObjects(action.payload);
+    case 'harvest':
+      tileInfo.inventory = {
+        ...tileInfo.inventory,
+        [tileInfo.crop]: tileInfo.inventory[tileInfo.crop] + tileInfo.harvest,
+      }
+      tileInfo.harvest = 0
+      tileInfo.crop = null
+      tileInfo.progress = 0
+      tileInfo.irrigation = {
+        amount: 0,
+      }
+      tileInfo.topdressing = {
+        material: {
+          nitro: 0,
+          phosphorus: 0,
+          cali: 0,
+        },
+        depth: 0,
+      }
+      storage.tileInfos[storage.currentTileId] = tileInfo;
+      player.storage = JSON.stringify(storage);
+      player.save()
       break
     default:
       break;
@@ -160,15 +198,22 @@ ScriptApp.onJoinPlayer.Add((player) => {
   player.sendUpdated();
 });
 
-ScriptApp.onUpdate.Add(() => {
+let acc = 0
+
+ScriptApp.onUpdate.Add((ms) => {
+  acc += ms
+  if (acc > 100) {
+    acc = 0
+    return
+  }
   ScriptApp.players.map((player) => {
     const tag: UserTag = player.tag;
     const currentTime = {x: player.tileX, y: player.tileY}
     tag.bottomModal.sendMessage(actionCreatorGame('current-time', currentTime));
     tag.timeModal.sendMessage(actionCreatorGame('current-time', currentTime));
-  });
-  ScriptApp.players.map((player) => {
+
     const storage: UserStorage = JSON.parse(player.storage);
+
     // player.showCenterLabel(player.storage);
     Object.values(storage.tileInfos).forEach((tileInfo) => {
       notOnLand = notOnLand && registerLandTileListener(player, tileInfo);
@@ -177,6 +222,19 @@ ScriptApp.onUpdate.Add(() => {
       player.tag.timeModal.sendMessage(actionCreatorGame("hide-crop-ui", null));
       player.tag.bottomModal.sendMessage(actionCreatorGame("hide-crop-ui", null));
     }
+
+    Object.values(storage.tileInfos).forEach((tileInfo) => {
+      if (!tileInfo.crop) return;
+      ScriptApp.httpPost(`${serverUrl}/after_cal?`.concat(generateAPIQueryParams(1, 0, 0)), {}, {}, (res) => {
+        const response = JSON.parse(res);
+        const [date, harvest, leaf] = response.data
+        tileInfo.harvest = harvest;
+        tileInfo.progress = leaf / 1000;
+        storage.tileInfos[storage.currentTileId] = tileInfo;
+        player.storage = JSON.stringify(storage);
+      })
+    })
+    player.save()
   });
 });
 

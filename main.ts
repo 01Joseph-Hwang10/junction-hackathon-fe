@@ -230,7 +230,7 @@ ScriptApp.onUpdate.Add((ms) => {
       if (!tileInfo.crop) return;
       ScriptApp.httpPost(`${serverUrl}/after_cal?`.concat(generateAPIQueryParams(1, 0, 0)), {}, {}, (res) => {
         const response = JSON.parse(res);
-        const [date, harvest, leaf] = response.data;
+        const [date, harvest, leaf] = response;
         tileInfo.harvest = harvest;
         tileInfo.progress = leaf / 1000;
         storage.tileInfos[storage.currentTileId] = tileInfo;

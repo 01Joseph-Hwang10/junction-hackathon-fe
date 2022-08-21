@@ -170,11 +170,16 @@ const appendButtonCards = <T extends Record<any, any>>(
   const buttonCard = getButtonCard();
   for (const card of Object.keys(items)) {
     const clone = document.importNode(buttonCard.content, true);
-    const button: HTMLButtonElement = clone.querySelector('.card');
-    // button.setAttribute('to', card);
+    const span = clone.querySelector('span');
+    span.innerHTML =
+    type === 'crop-selection'
+    ? `<div class="button-wrap"><img src="${iconSelection[card]}" /><span>${items[card]}</span></div>`
+    : `<div class="button-wrap"><span>${items[card]}</span><div class="popup">${descriptionActions[card]}</div></div>`;
+    const cards = to.querySelector('.cards');
+    cards.appendChild(clone);
+    const button: HTMLButtonElement = to.querySelector('.card:last-child button');
     if (type === 'crop-selection') {
-      console.log('crop-selection');
-      const selectCrop = async () => {
+      button.onclick = async () => {
         const crop: CropType = card as CropType;
         window.postMessage(actionCreatorBottomModal('set-crop', crop), '*');
         const currentTileInfo: LandTileInfo = await requestCurrentTileInfo();
@@ -183,17 +188,7 @@ const appendButtonCards = <T extends Record<any, any>>(
           crop,
         });
       }
-      button.setAttribute('onclick', 'selectCrop()');
-      button.onclick = selectCrop
     }
-    // button.setAttribute('style', `width: ${100 / Object.keys(items).length}%;`);
-    const span = clone.querySelector('span');
-    span.innerHTML =
-      type === 'crop-selection'
-        ? `<div class="button-wrap"><img src="${iconSelection[card]}" /><span>${items[card]}</span></div>`
-        : `<div class="button-wrap"><span>${items[card]}</span><div class="popup">${descriptionActions[card]}</div></div>`;
-    const cards = to.querySelector('.cards');
-    cards.appendChild(clone);
   }
   const buttons: HTMLButtonElement[] = [];
   to.querySelectorAll('button.card').forEach((button: HTMLButtonElement) => buttons.push(button));

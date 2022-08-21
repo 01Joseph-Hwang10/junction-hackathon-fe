@@ -128,6 +128,8 @@ const reducer = (widget: ScriptWidget, player: ScriptPlayer, action: Action) => 
   }
 };
 
+let notOnLand = true
+
 // Add control panels and indicators
 ScriptApp.onJoinPlayer.Add((player) => {
   // Declare widgets
@@ -164,6 +166,17 @@ ScriptApp.onUpdate.Add(() => {
     const currentTime = {x: player.tileX, y: player.tileY}
     tag.bottomModal.sendMessage(actionCreatorGame('current-time', currentTime));
     tag.timeModal.sendMessage(actionCreatorGame('current-time', currentTime));
+  });
+  ScriptApp.players.map((player) => {
+    const storage: UserStorage = JSON.parse(player.storage);
+    // player.showCenterLabel(player.storage);
+    Object.values(storage.tileInfos).forEach((tileInfo) => {
+      notOnLand = notOnLand && registerLandTileListener(player, tileInfo);
+    });
+    if (notOnLand) {
+      player.tag.timeModal.sendMessage(actionCreatorGame("hide-crop-ui", null));
+      player.tag.bottomModal.sendMessage(actionCreatorGame("hide-crop-ui", null));
+    }
   });
 });
 

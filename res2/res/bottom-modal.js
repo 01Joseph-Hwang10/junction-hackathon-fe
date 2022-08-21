@@ -177,26 +177,6 @@ var appendButtonCards = function (type, items, to) {
     var buttonCard = getButtonCard();
     var _loop_1 = function (card) {
         var clone = document.importNode(buttonCard.content, true);
-        var button = clone.querySelector('.card');
-        // button.setAttribute('to', card);
-        if (type === 'crop-selection') {
-            button.onclick = function () { return __awaiter(void 0, void 0, void 0, function () {
-                var crop, currentTileInfo;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            crop = card;
-                            window.postMessage(actionCreatorBottomModal('set-crop', crop));
-                            return [4 /*yield*/, requestCurrentTileInfo()];
-                        case 1:
-                            currentTileInfo = _a.sent();
-                            registerSelectStatusUI(__assign(__assign({}, currentTileInfo), { crop: crop }));
-                            return [2 /*return*/];
-                    }
-                });
-            }); };
-        }
-        button.setAttribute('style', "width: ".concat(100 / items.length, "%;"));
         var span = clone.querySelector('span');
         span.innerHTML =
             type === 'crop-selection'
@@ -204,6 +184,24 @@ var appendButtonCards = function (type, items, to) {
                 : "<div class=\"button-wrap\"><span>".concat(items[card], "</span><div class=\"popup\">").concat(descriptionActions[card], "</div></div>");
         var cards_1 = to.querySelector('.cards');
         cards_1.appendChild(clone);
+        var button = to.querySelector('.card:last-child button');
+        if (type === 'crop-selection') {
+            button.onclick = function () { return function () { return __awaiter(void 0, void 0, void 0, function () {
+                var crop, currentTileInfo;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            crop = card;
+                            window.postMessage(actionCreatorBottomModal('set-crop', crop), '*');
+                            return [4 /*yield*/, requestCurrentTileInfo()];
+                        case 1:
+                            currentTileInfo = _a.sent();
+                            registerSelectStatusUI(__assign(__assign({}, currentTileInfo), { crop: crop }));
+                            return [2 /*return*/];
+                    }
+                });
+            }); }; };
+        }
     };
     for (var _i = 0, _a = Object.keys(items); _i < _a.length; _i++) {
         var card = _a[_i];
@@ -249,7 +247,7 @@ var requestCurrentTileInfo = function () {
                 resolve(data.payload);
             }
         });
-        window.postMessage(actionCreatorBottomModal('request-current-tile-info', null));
+        window.postMessage(actionCreatorBottomModal('request-current-tile-info', null), '*');
     });
 };
 var registerCropSelectionUI = function () {
@@ -368,7 +366,7 @@ var registerSelectIrrigationUI = function (info) {
     // Add Irrigation
     var addIrrigationButton = selectIrrigation.querySelector('#add-irrigation button');
     addIrrigationButton.onclick = function () {
-        window.postMessage(actionCreatorBottomModal('add-irrigation', null));
+        window.postMessage(actionCreatorBottomModal('add-irrigation', null), '*');
     };
     if (info.irrigation.method) {
         irrigationMethodOptions.forEach(function (option) {

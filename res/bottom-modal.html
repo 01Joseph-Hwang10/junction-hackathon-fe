@@ -332,6 +332,15 @@
     };
   };
 
+  const Option = ({ src, title, value }) => {
+    return (
+      <option value={value}>
+        <img src={src} />
+        <span>{title}</span>
+      </option>
+    )
+  }
+
   const ButtonCard = ({ type, onClick, src, title, description }) => {
     return (
       <button onClick={onClick} className="card">
@@ -544,11 +553,17 @@
               <div className="cards cards-vertical">
                 <select id="sow-method" value="default">
                   <option value="default">파종 방식을 선택해주세요</option>
+                  {Object.keys(sowMethods).map((key) => (
+                    <Option title={sowMethod[key]} value={key} />
+                  ))}
                 </select>
                 <select id="sow-gap" value="default">
                   <option value="default" disabled>
                     파종 간격을 선택해주세요
                   </option>
+                  {Object.keys(sowGap).map((key) => (
+                    <Option title={sowGap[key]} value={key} />
+                  ))}
                 </select>
               </div>
             </div>
@@ -572,6 +587,9 @@
               <div className="cards cards-vertical">
                 <select id="irrigation-method" value="default">
                   <option value="default">관개 방식을 선택해주세요</option>
+                  {Object.keys(irrigationMethods).map((key) => (
+                    <Option title={irrigationMethod[key]} value={key} />
+                  ))}
                 </select>
                 <div id="add-irrigation" style={{ width: '100%' }}>
                   <button class="primary-button">물 주기</button>
@@ -601,6 +619,9 @@
                   <option value="" disabled selected>
                     시비 방식을 선택해주세요
                   </option>
+                  {Object.keys(topDressingMethods).map((key) => (
+                    <Option title={topDressingMethod[key]} value={key} />
+                  ))}
                 </select>
                 <div id="topdressing-item-container">
                   <div id="topdressing-item" className="container row">
@@ -619,9 +640,6 @@
                     <span>깊이</span>
                     <input type="range" min="0" max="100" value="0" />
                   </div>
-                </div>
-                <div id="add-irrigation" style={{ width: '100%' }}>
-                  <button class="primary-button">물 주기</button>
                 </div>
               </div>
             </div>

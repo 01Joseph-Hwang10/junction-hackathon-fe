@@ -92,7 +92,7 @@ const reducer = (widget: ScriptWidget, player: ScriptPlayer, action: Action) => 
       player.save();
       break;
     case 'request-current-tile-info':
-      widget.sendMessage(actionCreatorGame('response-current-tile-info', { type: action.payload, data: tileInfo }));
+      widget.sendMessage(actionCreatorGame('response-current-tile-info', tileInfo));
       break;
     case 'set-crop':
       tileInfo.crop = action.payload;
@@ -100,15 +100,13 @@ const reducer = (widget: ScriptWidget, player: ScriptPlayer, action: Action) => 
       player.save();
       ScriptApp.httpPost(`${serverUrl}/first_cal?`.concat(generateAPIQueryParams(0, 0, 0)), {}, {}, (res: any) => {
         const response = JSON.parse(res);
-        // player.showCenterLabel(res);
+        player.showCenterLabel(res);
         const [date, harvest, leaf] = response;
-        // ScriptApp.sayToAll(`${JSON.stringify({ date, harvest, leaf })}`);
         tileInfo.harvest = harvest;
         tileInfo.progress = leaf / 1000;
         storage.tileInfos[storage.currentTileId] = tileInfo;
         player.storage = JSON.stringify(storage);
         player.save();
-        widget.sendMessage(actionCreatorGame('response-current-tile-info', { type: 'update', data: tileInfo }));
       });
       const sprite = ScriptApp.loadSpritesheet('Assets/corn seed.png');
       ScriptMap.putObject(tileInfo.range.x[0] - 1, tileInfo.range.y[0] - 2, sprite, { overwrite: true });
@@ -165,9 +163,6 @@ const reducer = (widget: ScriptWidget, player: ScriptPlayer, action: Action) => 
       storage.tileInfos[storage.currentTileId] = tileInfo;
       player.storage = JSON.stringify(storage);
       player.save();
-      break;
-    case 'say-to-all':
-      ScriptApp.sayToAll(JSON.stringify(action.payload));
       break;
     default:
       break;
@@ -238,6 +233,14 @@ ScriptApp.onUpdate.Add((ms) => {
         const [date, harvest, leaf] = response;
         tileInfo.harvest = harvest;
         tileInfo.progress = leaf / 1000;
+        if (tileInfo.progress > 0.6) {
+          const sprite = ScriptApp.loadSpritesheet('Assets/corn wide - 03.png');
+          ScriptMap.putObject(tileInfo.range.x[0] - 1, tileInfo.range.y[0] - 2, sprite, { overwrite: true });
+        }
+        if (tileInfo.progress > 0.3) {
+          const sprite = ScriptApp.loadSpritesheet('Assets/corn wide - 02.png');
+          ScriptMap.putObject(tileInfo.range.x[0] - 1, tileInfo.range.y[0] - 2, sprite, { overwrite: true });
+        }
         storage.tileInfos[storage.currentTileId] = tileInfo;
         player.storage = JSON.stringify(storage);
       });

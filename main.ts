@@ -96,10 +96,10 @@ const reducer = (widget: ScriptWidget, player: ScriptPlayer, action: Action) => 
       break;
     case 'set-crop':
       tileInfo.crop = action.payload;
-      ScriptApp.httpPost(`${serverUrl}/first_cal?`.concat(generateAPIQueryParams(0, 0, 0)), {}, {}, (res) => {
+      ScriptApp.httpPost(`${serverUrl}/first_cal?`.concat(generateAPIQueryParams(0, 0, 0)), {}, {}, (res: any) => {
         const response = JSON.parse(res);
-        player.showCenterLabel(res)
-        const [date, harvest, leaf] = response.data
+        player.showCenterLabel(res);
+        const [date, harvest, leaf] = response;
         tileInfo.harvest = harvest;
         tileInfo.progress = leaf / 1000;
         storage.tileInfos[storage.currentTileId] = tileInfo;

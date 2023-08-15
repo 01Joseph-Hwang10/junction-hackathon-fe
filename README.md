@@ -1,9 +1,11 @@
 # ru:real
 
-Junction Asia 2022의 스폰서로 참가한 ZEP의 트랙을 선택해 개발한 메타버스 귀농 시뮬레이션.
+Junction Asia 2022의 스폰서로 참가한 [ZEP](https://zep.us/)의 트랙을 선택해 개발한 메타버스 귀농 시뮬레이션.
 
 > [!NOTE]\
 > 최종 피치덱은 [여기](https://drive.google.com/file/d/14k31SbxSAMT_uiBb1yELl2YphAv-s8WK/view?usp=sharing)를 참조하세요.
+
+"ru:real"은 도시화가 매우 높은 수준으로 진행된 현재, 귀농에 관심이 있는 일반인들이 도시에서 시골로 이주하여 지내는 삶이 어떤지를 간접적으로 배우고 체험하며, 이러한 사람들이 온라인 상에 모여 상호 교류하는 커뮤니티 형성을 도모하고자 기획된 메타버스 귀농 시뮬레이션으로, 메타버스 플랫폼인 [ZEP](https://zep.us/)과 농작물의 성장을 시뮬레이션하는 [DSSAT](https://dssat.net/), 그리고 각종 Typescript 라이브러리 (e.g. React, Express.js, ...)로 구현하였습니다.
 
 ## Showcase
 

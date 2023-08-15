@@ -1,45 +1,14 @@
-# ZEP Script App Template
+# ru:real
 
-Template for ZEP Script app.
+Junction Asia 2022의 스폰서로 참가한 ZEP의 트랙을 선택해 개발한 메타버스 귀농 시뮬레이션.
 
-## Directory Structure
+> [!NOTE]\
+> 최종 피치덱은 [여기](https://drive.google.com/file/d/14k31SbxSAMT_uiBb1yELl2YphAv-s8WK/view?usp=sharing)를 참조하세요.
 
-```
-📦Project Root
- ┣ 📂res
- ┣ babel.config.js
- ┣ main.ts
- ┣ package.json
- ┣ tsconfig.json
- ┗ yarn.lock
-```
+## Showcase
 
-- `📂res`: Put all the resources(images, sounds) of the app inside this folder.
-- `babel.config.js`: Babel configuration file.
-- `main.ts`: Main entry file of the app. The name of this file should not be changed.
-- `package.json`: Package.json file.
-- `tsconfig.json`: TypeScript configuration file.
-- `yarn.lock`: Yarn lock file.
+<img width="627" alt="스크린샷 2023-08-15 오후 6 22 24" src="https://github.com/01Joseph-Hwang10/junction-hackathon-fe/assets/72839543/e6f4f8c5-3fab-41b8-a424-15a0c495f5ac">
 
-## Usage
+## Architecture Overview
 
-### Build the project
-
-You need to build the project before you can archive your project.
-
-```bash
-yarn build
-```
-
-### Archive the project
-
-Archive the project by running the following command. You can upload the generated project archive in the [ZEP desktop website](https://zep.us/me/apps/).
-
-```bash
-yarn archive
-```
-
-### ZEP Script API Documentation
-
-- [English](https://docs.zep.us/zep-script)
-- [Korean](https://docs-kr.zep.us/zep-script)
+<img width="1145" alt="스크린샷 2023-08-15 오후 6 32 02" src="https://github.com/01Joseph-Hwang10/junction-hackathon-fe/assets/72839543/e0a72cf7-67f0-4d2b-b8f7-54a5fa0221fc">
